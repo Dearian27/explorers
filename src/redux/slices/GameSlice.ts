@@ -1,17 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { IPlayer } from "./types";
+import { PlayerMessage } from "../../types";
 
 export interface CounterState {
   isGameStarted: boolean;
   game: {
+    additionalSettings: {
+      isInterceptorsViewClear: boolean;
+    };
+    messages: PlayerMessage[];
+    playersCount: number;
     players: IPlayer[];
+    infectNights: number[];
   };
 }
 
 const initialState: CounterState = {
   isGameStarted: false,
   game: {
+    additionalSettings: {
+      isInterceptorsViewClear: true,
+    },
+    messages: [],
+    infectNights: [1, 3, 4, 6],
+    playersCount: 0,
     players: [],
   },
 };
