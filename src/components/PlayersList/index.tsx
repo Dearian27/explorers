@@ -8,6 +8,7 @@ interface PlayersListProps {
 }
 
 const filterPlayers = (players, filter) => {
+  console.log(filter);
   return players;
 };
 
