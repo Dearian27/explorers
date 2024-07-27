@@ -3,4 +3,5 @@ export interface IPlayer {
   index?: number; //? no sure is it needed
   name: string;
   role: string;
+  isClone: boolean;
 }
