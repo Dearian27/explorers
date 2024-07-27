@@ -1,5 +1,9 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import ListItem from "./ListItem";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
+import { setSelectedPlayers } from "../../../redux/slices/GameSlice";
+import { IPlayer } from "../../../redux/slices/types";
 
 interface PlayersListProps {
   maxSelected?: number;
@@ -16,36 +20,35 @@ const PlayersList: FC<PlayersListProps> = ({
   maxSelected = 1,
   filter = "you",
 }) => {
-  const [selectedPlayers, setSelectedPlayers] = useState<number[]>([]);
+  const dispatch = useDispatch();
+  const { players, submitSelection, selectedPlayers } = useSelector(
+    (state: RootState) => state.game.game
+  );
 
   const handleSelect = (playerId: number) => {
+    if (submitSelection) return;
     if (selectedPlayers.includes(playerId)) {
-      setSelectedPlayers(selectedPlayers.filter((id) => id !== playerId));
+      dispatch(
+        setSelectedPlayers(selectedPlayers.filter((id) => id !== playerId))
+      );
     } else if (maxSelected === 1) {
-      setSelectedPlayers([playerId]);
+      dispatch(setSelectedPlayers([playerId]));
     } else if (maxSelected > selectedPlayers.length) {
-      setSelectedPlayers((prev) => [...prev, playerId]);
+      dispatch(setSelectedPlayers([...selectedPlayers, playerId]));
     }
   };
 
-  const players = [
-    { id: 0 },
-    { id: 1 },
-    { id: 2 },
-    { id: 3 },
-    { id: 4 },
-    { id: 5 },
-    { id: 6 },
-  ];
-
   return (
     <div className="flex flex-wrap gap-1">
-      {filterPlayers(players, filter).map((player) => {
+      {filterPlayers(players, filter).map((player: IPlayer) => {
         return (
           <ListItem
+            key={player.id}
             isSelected={selectedPlayers.includes(player.id)}
             onClick={() => handleSelect(player.id)}
             playerId={player.id}
+            isSubmitted={submitSelection}
+            submitClassName="bg-red-300 border-red-400"
           />
         );
       })}

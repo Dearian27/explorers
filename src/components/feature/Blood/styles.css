@@ -1,0 +1,29 @@
+@keyframes bloodAnimation {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.blood-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle,
+    transparent,
+    transparent 70%,
+    rgba(255, 0, 0, 0.5) 80%
+  );
+  pointer-events: none;
+  animation: bloodAnimation 3s infinite;
+}
