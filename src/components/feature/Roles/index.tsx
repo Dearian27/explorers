@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from "react";
-import rolesJSON from "../../assets/data/roles.json";
+import rolesJSON from "../../../assets/data/roles.json";
 import RoleItem from "./RoleItem";
 import { RolesProps } from "./types";
-import { RoleParams } from "../../types";
+import { RoleParams } from "../../../types";
 // import roles from "@/assets/data/roles.json";
 // import roles from "@/";
 

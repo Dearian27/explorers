@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { RoleItemProps } from "./types";
-import NumberInput from "../NumberInput";
+import NumberInput from "../../common/NumberInput";
 
 const RoleItem: FC<RoleItemProps> = ({ role, setCount }) => {
   // const [count, setCount] = useState(role.count);

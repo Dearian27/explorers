@@ -1,9 +1,9 @@
 import { useState } from "react";
-import PlayersList from "../../components/PlayersList";
-import NumberInput from "../../components/NumberInput";
-import Roles from "../../components/Roles";
-import BadVisionedText from "../../components/BadVisionedText";
-import Textarea from "../../components/Textarea";
+import PlayersList from "../../components/feature/PlayersList";
+import NumberInput from "../../components/common/NumberInput";
+import Roles from "../../components/feature/Roles";
+import BadVisionedText from "../../components/feature/BadVisionedText";
+import Textarea from "../../components/common/Textarea";
 
 const StartGame = () => {
   const [playersCount, setPlayersCount] = useState<number>(5);
@@ -35,6 +35,8 @@ const StartGame = () => {
       <BadVisionedText
         text={"Кліпну одним оком коли буде черга гравця номер 4"}
       />
+
+      <button className="button self-start">Start night</button>
     </>
   );
 };

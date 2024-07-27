@@ -1,4 +1,4 @@
-import { RoleParams } from "../../types";
+import { RoleParams } from "../../../types";
 
 export interface RolesProps {
   playersCount: number;
