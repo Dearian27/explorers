@@ -13,7 +13,7 @@ const BottomPanel: FC<BottomPanelProps> = ({
   return (
     <div
       className={twMerge(
-        "absolute bottom-0 left-0 right-0 h-16 flex items-center px-4 gap-2 w-full bg-gray-100",
+        "fixed max-w-[780px] mx-auto bottom-0 h-16 flex items-center px-4 gap-2 w-full bg-gray-100",
         className
       )}
       {...props}
