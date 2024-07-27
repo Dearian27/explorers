@@ -1,0 +1,34 @@
+@-webkit-keyframes fill {
+  to {
+    background-size: 100% 0;
+  }
+}
+
+@keyframes fill {
+  to {
+    background-size: 100% 0;
+  }
+}
+
+/* .cnh_holding button {
+  overflow: hidden;
+}
+.cnh_holding button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: -webkit-linear-gradient(white, white) rgb(255, 215, 235) no-repeat
+    0 0;
+  background: linear-gradient(white, white) rgb(255, 215, 235) no-repeat 0 0;
+  mix-blend-mode: multiply;
+  background-size: 100% 100%;
+  -webkit-animation: fill 2s forwards;
+  animation: fill 2s forwards;
+}
+.cnh_holding button.holding::before {
+  clip-path: inset(0 0 0 0);
+} */

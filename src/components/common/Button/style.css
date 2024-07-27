@@ -1,0 +1,35 @@
+#bloodButton {
+  cursor: pointer;
+  position: relative;
+}
+#bloodButton:disabled {
+  cursor: default;
+}
+
+.particle {
+  width: 5px;
+  height: 5px;
+  background-color: red;
+  position: absolute;
+  border-radius: 50%;
+  opacity: 1;
+  pointer-events: none;
+}
+
+@keyframes particleAnimation {
+  0% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  40% {
+    transform: translate(var(--x), var(--y));
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(var(--x) * 1.1), calc(var(--y) * -0.1));
+    opacity: 0;
+  }
+}

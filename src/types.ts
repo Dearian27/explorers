@@ -8,8 +8,20 @@ export interface RoleParams {
   single?: boolean;
 }
 
+export type RoleVariants =
+  | "clone"
+  | "explorer"
+  | "detective"
+  | "interceptor"
+  | "finder"
+  | "role";
+
 export interface PlayerMessage {
   id: number;
-  playerId: number;
+  senderId: number;
+  receiversId: number[];
+  sendDay: number;
+  receiptDay: number;
+  type: "clone";
   text: string;
 }
