@@ -1,30 +1,8 @@
-# React + TypeScript + Vite
+- Вакцина має переназначати activeClone, проте невідомо як чинити з цим, адже той хто був клоном може розказати всю інформацію
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- Додати 10 секундний таймер першому гравцю вночі (мб ще 5-секундний другому)
 
-Currently, two official plugins are available:
+- додати анонімне голосування вночі для миринх: кого найбільше ви підозрюєте клоном - оце буде крутяк
+  це може бути для того, що повідомлення приходили в ту ж ніч, тобто береть 2-3 особи і ще раз їм дають провести свій нічний хід, серед них може бути жертва клонів :)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- Роль наглядач - якраз до вернього запису - він може дивитись ці анонімні голосування
