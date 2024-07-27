@@ -1,7 +1,7 @@
 import "./styles.css";
 import ClickNHold from "react-click-n-hold";
 
-const Cover = ({ onComplete, currentPlayer }) => {
+const Cover = ({ onComplete, currentPlayer, name = "" }) => {
   const time = 1.2;
   return (
     <ClickNHold
@@ -14,7 +14,10 @@ const Cover = ({ onComplete, currentPlayer }) => {
         <span className="text-white font-bold text-3xl">
           Гравець {currentPlayer}
         </span>
-        <button className="text-white animated">УТРИМАТИ</button>
+        {name && (
+          <span className="text-slate-400 font-extrabold text-xl">{name}</span>
+        )}
+        <button className="text-white animated mt-6">УТРИМАТИ</button>
       </div>
     </ClickNHold>
   );

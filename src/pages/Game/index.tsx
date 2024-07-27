@@ -12,6 +12,7 @@ import {
   setIsNight,
   setNextCurrentPlayer,
   setNextDay,
+  setPlayerName,
   setSelectedPlayers,
   setSubmitSelectedPlayers,
 } from "../../redux/slices/GameSlice";
@@ -21,8 +22,9 @@ import Textarea from "../../components/common/Textarea";
 import Cover from "./Cover";
 import { IPlayer } from "../../redux/slices/types";
 import Message from "../../components/common/Message";
+import Input from "../../components/common/Input";
 
-function shuffleArray(array) {
+function shuffleArray(array: Array<IPlayer>) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]]; // обмін значень
@@ -65,6 +67,7 @@ const Game = () => {
 
   const [playerInterfaceShow, setPlayerInterfaceShow] = useState(-1);
   const [message, setMessage] = useState("");
+  const [name, setName] = useState("");
 
   const sendCloneMessage = () => {
     dispatch(
@@ -85,17 +88,22 @@ const Game = () => {
     dispatch(setIsNight(!isNight));
   };
 
-  const startGame = (playersCount) => {
-    let players = shuffleArray(
+  const startGame = (playersCount: number) => {
+    const players: IPlayer[] = shuffleArray(
       createStarterRoles(playersCount).map((role) => {
         return {
+          id: 0,
+          disabledCellIds: [],
           role: role.name,
-          name: "name",
+          name: "",
           isClone: role.name === "clone" ? true : false,
         };
       })
-    );
-    players = players.map((p, id: number) => ({ ...p, id }));
+    ).map((p, id: number) => ({
+      ...p,
+      disabledCellIds: [id],
+      id,
+    }));
     dispatch(initPlayers(players));
     dispatch(setNextDay());
     dispatch(
@@ -110,7 +118,11 @@ const Game = () => {
     dispatch(setSubmitSelectedPlayers(true));
   };
   const setNextPlayer = () => {
-    if (submitSelection) sendCloneMessage();
+    if (submitSelection && message) sendCloneMessage();
+    if (day === 1) {
+      dispatch(setPlayerName({ id: players[currentPlayer]?.id, name }));
+      setName("");
+    }
     dispatch(setSubmitSelectedPlayers(false));
     dispatch(setSelectedPlayers([]));
     if (currentPlayer < players.length - 1) {
@@ -128,16 +140,28 @@ const Game = () => {
   return (
     <>
       <PhaseLayout type="night">
-        <div className="w-full h-full">
+        <div className="w-full h-full p-4 pb-16 gap-4 flex flex-col">
           {playerInterfaceShow !== currentPlayer && (
             <Cover
+              name={players[currentPlayer]?.name}
               currentPlayer={currentPlayer + 1}
               onComplete={() => {
                 setPlayerInterfaceShow(currentPlayer);
               }}
             />
           )}
-          <div>{players[currentPlayer]?.role}</div>
+          <h1 className="text-2xl font-bold self-center uppercase">
+            {players[currentPlayer]?.role}
+          </h1>
+          {day === 1 && (
+            <Input
+              max={10}
+              containerClassName="self-center"
+              placeholder="Ім'я"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          )}
 
           {players[currentPlayer]?.id === activeCloneId && (
             <>
@@ -241,14 +265,15 @@ const Game = () => {
               INFECT
             </Button>
           )}
-          <button
+          <Button
+            disabled={day === 1 && !name}
             onClick={() => setNextPlayer()}
             className="btn3d bg-cyan-400 shadow-cyan-500"
           >
             {currentPlayer === playersCount - 1
               ? "Завершити ніч"
               : "Завершити хід"}
-          </button>
+          </Button>
         </PhaseLayout>
         <PhaseLayout type="day">
           {day === 0 ? (

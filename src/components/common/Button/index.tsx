@@ -66,7 +66,7 @@ const Button: FC<ButtonProps> = ({
         onClick?.();
       }}
       className={twMerge(
-        "btn3d disabled:bg-zinc-300 disabled:!shadow-zinc-400",
+        "btn3d disabled:!bg-zinc-300 disabled:!shadow-zinc-400",
         className,
         wasClicked &&
           freezeActive &&

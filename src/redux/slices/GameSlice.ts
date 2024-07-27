@@ -94,6 +94,15 @@ const gameSlice = createSlice({
     addMessage: (state, action: PayloadAction<PlayerMessage>) => {
       state.game.messages.push(action.payload);
     },
+    setPlayerName: (
+      state,
+      action: PayloadAction<{ id: number; name: string }>
+    ) => {
+      if (state.game.players.find((p) => p.id === action.payload.id)) {
+        state.game.players.find((p) => p.id === action.payload.id).name =
+          action.payload.name;
+      }
+    },
   },
 });
 
@@ -109,6 +118,7 @@ export const {
   clearSelectedPlayers,
   setSubmitSelectedPlayers,
   addMessage,
+  setPlayerName,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;
