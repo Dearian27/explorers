@@ -1,20 +1,23 @@
-import { ChangeEvent, ComponentPropsWithoutRef, FC, useState } from "react";
+import { ComponentPropsWithoutRef, FC, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface InputProps extends ComponentPropsWithoutRef<"input"> {
   containerClassName?: string;
   max?: number;
   className?: string;
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  value: string;
 }
 
 const Input: FC<InputProps> = ({
   containerClassName = "",
   max,
   className,
-  onChange,
+  value,
   ...props
 }) => {
+  useEffect(() => {
+    setInputValueLength(value.length);
+  }, [value]);
   const [inputValueLength, setInputValueLength] = useState(0);
   return (
     <div
@@ -24,10 +27,7 @@ const Input: FC<InputProps> = ({
       )}
     >
       <input
-        onChange={(e) => {
-          setInputValueLength(e.target.value.length);
-          onChange?.(e);
-        }}
+        value={value}
         maxLength={max || 10000}
         className={twMerge(
           "w-full px-3 py-2 rounded-md bg-white outline-none",
