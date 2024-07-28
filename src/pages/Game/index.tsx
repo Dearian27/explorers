@@ -11,6 +11,7 @@ import Message from "../../components/common/Message";
 import Input from "../../components/common/Input";
 import BadVisionedText from "../../components/feature/BadVisionedText";
 import { useGameProps } from "./GameProvider";
+import { twMerge } from "tailwind-merge";
 
 const Game = () => {
   const {
@@ -40,7 +41,6 @@ const Game = () => {
     day,
     messages,
     submitSelection,
-    activeCloneId,
     additionalSettings: { isInterceptorsViewClear },
   } = useSelector((state: RootState) => state.game.game);
 
@@ -57,13 +57,16 @@ const Game = () => {
               }}
             />
           )}
-          <h1 className="text-2xl font-bold self-center uppercase">
+          <h1
+            className={twMerge(
+              "text-2xl font-bold self-center uppercase",
+              players[currentPlayer]?.isClone && "text-red-500"
+            )}
+          >
             {players[currentPlayer]?.role}
           </h1>
           <h2 className="flex flex-col">
             <span>Ніч: {day}</span>
-            <span>наступне вбивство: {activeCloneId.startDay}</span>
-            <span>активний клон: {activeCloneId.value}</span>
           </h2>
           <PhaseLayout currentDay={1}>
             <Input
@@ -88,6 +91,7 @@ const Game = () => {
                 setValue={setMessage}
                 min={0}
                 max={35}
+                placeholder="Повідомлення (необов'язково)"
               />
             </>
           )}

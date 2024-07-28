@@ -20,9 +20,9 @@ const Textarea: FC<TextareaProps> = ({
   ...props
 }) => {
   return (
-    <div className="w-full relative inline-flex self-start rounded-md pb-6 border border-gray-400 ">
+    <div className="w-full relative inline-flex self-start rounded-md border btn3d bg-slate-200 text-black p-1 focus:translate-y-1 shadow-none">
       <textarea
-        className="p-3 w-full outline-none bg-transparent resize-none text-md"
+        className="p-3 w-full outline-none bg-transparent resize-none text-md bg-white rounded-md pb-6"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         minLength={min}

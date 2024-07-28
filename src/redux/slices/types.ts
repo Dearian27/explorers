@@ -1,9 +1,8 @@
 export interface IPlayer {
   id: number;
-  index?: number; //? no sure is it needed
   name: string;
   role: string;
   isClone: boolean;
-  wasClone: boolean;
+  cloneStartDay?: number; //?  mean start day of setting isClone to true
   disabledCellIds: number[];
 }

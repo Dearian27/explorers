@@ -10,6 +10,7 @@ import { RootState } from "../../redux/store";
 import {
   addMessage,
   initPlayers,
+  markPlayerAsClone,
   resetNightData,
   setActiveCloneId,
   setIsNight,
@@ -86,6 +87,7 @@ export const GameProvider = ({ children }) => {
     activeCloneId,
     additionalSettings: { firstInfectDay },
     submitSelection,
+    messages,
   } = useSelector((state: RootState) => state.game.game);
   const dispatch = useDispatch();
 
@@ -105,7 +107,9 @@ export const GameProvider = ({ children }) => {
     dispatch(
       addMessage({
         type: "clone",
-        id: 1,
+        id: messages[messages.length - 1]?.id
+          ? messages[messages.length - 1]?.id + 1
+          : 0,
         text: message,
         senderId: players[currentPlayer].id,
         sendDay: day,
@@ -118,6 +122,12 @@ export const GameProvider = ({ children }) => {
 
   const toggleNightHandler = () => {
     dispatch(setIsNight(!isNight));
+    if (
+      activeCloneId.value === players[currentPlayer + 1]?.id &&
+      activeCloneId.startDay <= day
+    ) {
+      markPlayerAsClone(players[currentPlayer + 1].id);
+    }
   };
 
   const startGame = (playersCount: number) => {
@@ -129,7 +139,6 @@ export const GameProvider = ({ children }) => {
           role: role.name,
           name: "",
           isClone: role.name === "clone" ? true : false,
-          wasClone: role.name === "clone" ? true : false,
         };
       })
     ).map((p, id: number) => ({
@@ -149,6 +158,7 @@ export const GameProvider = ({ children }) => {
     );
   };
   const resetTurnData = () => {
+    setWasActiveClone(false);
     if (day === 1) {
       dispatch(setPlayerName({ id: players[currentPlayer]?.id, name }));
       setName("");
@@ -157,7 +167,7 @@ export const GameProvider = ({ children }) => {
     dispatch(setSelectedPlayers([]));
   };
   const infectPerson = () => {
-    setWasActiveClone(false);
+    setWasActiveClone(true);
     dispatch(setSubmitSelectedPlayers(true));
     dispatch(setPersonInfected(selectedPlayers[0]));
   };
@@ -166,6 +176,12 @@ export const GameProvider = ({ children }) => {
     resetTurnData();
     if (currentPlayer < players.length - 1) {
       dispatch(setNextCurrentPlayer());
+      if (
+        activeCloneId.value === players[currentPlayer + 1]?.id &&
+        activeCloneId.startDay <= day
+      ) {
+        markPlayerAsClone(players[currentPlayer + 1].id);
+      }
     } else {
       endNight();
     }

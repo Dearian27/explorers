@@ -109,12 +109,14 @@ const gameSlice = createSlice({
       }
     },
     setPersonInfected: (state, action: PayloadAction<number>) => {
-      console.log("action.payload");
-      console.log(action.payload);
       state.game.activeCloneId = {
         value: action.payload,
         startDay: state.game.day + 1,
       };
+    },
+    markPlayerAsClone: (state, action: PayloadAction<number>) => {
+      if (state.game.players.find((p) => p.id === action.payload))
+        state.game.players.find((p) => p.id === action.payload).isClone = true;
     },
   },
 });
@@ -133,6 +135,7 @@ export const {
   addMessage,
   setPlayerName,
   setPersonInfected,
+  markPlayerAsClone,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;
