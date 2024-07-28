@@ -118,6 +118,9 @@ const gameSlice = createSlice({
       if (state.game.players.find((p) => p.id === action.payload))
         state.game.players.find((p) => p.id === action.payload).isClone = true;
     },
+    setIsGameStarted: (state, action: PayloadAction<boolean>) => {
+      state.isGameStarted = action.payload;
+    },
   },
 });
 
@@ -136,6 +139,7 @@ export const {
   setPlayerName,
   setPersonInfected,
   markPlayerAsClone,
+  setIsGameStarted,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

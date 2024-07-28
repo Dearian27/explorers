@@ -1,6 +1,6 @@
 import BottomPanel from "../../components/layout/BottomPanel";
 import Button from "../../components/common/Button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import "./styles.css";
 import PhaseLayout from "../../components/layout/PhaseLayout";
@@ -12,6 +12,7 @@ import Input from "../../components/common/Input";
 import BadVisionedText from "../../components/feature/BadVisionedText";
 import { useGameProps } from "./GameProvider";
 import { twMerge } from "tailwind-merge";
+import { setIsGameStarted } from "../../redux/slices/GameSlice";
 
 const Game = () => {
   const {
@@ -43,7 +44,7 @@ const Game = () => {
     submitSelection,
     additionalSettings: { isInterceptorsViewClear },
   } = useSelector((state: RootState) => state.game.game);
-
+  const dispatch = useDispatch();
   return (
     <>
       <PhaseLayout dayPhase="night">
@@ -137,6 +138,9 @@ const Game = () => {
         <div>
           <header className="w-full bg-gray-200 p-4 flex justify-between">
             <h1>День: {day}</h1>
+            <Button onClick={() => dispatch(setIsGameStarted(true))}>
+              Other screen
+            </Button>
           </header>
           <div className="flex-1 flex flex-col">
             <Message
