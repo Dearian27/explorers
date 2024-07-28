@@ -9,6 +9,7 @@ export interface CounterState {
     isNight: boolean;
     day: number;
     additionalSettings: {
+      firstInfectDay: number;
       isInterceptorsViewClear: boolean;
     };
     messages: PlayerMessage[];
@@ -16,7 +17,7 @@ export interface CounterState {
     players: IPlayer[];
     infectNights: number[];
     currentPlayer: number;
-    activeCloneId: number;
+    activeCloneId: { value: number; startDay: number };
     selectedPlayers: number[];
     submitSelection: boolean;
   };
@@ -38,13 +39,14 @@ const initialState: CounterState = {
     day: 0,
     additionalSettings: {
       isInterceptorsViewClear: true,
+      firstInfectDay: 1,
     },
     messages: [],
     infectNights: [1, 3, 4, 6],
     playersCount: 10,
     players: [],
     currentPlayer: 0,
-    activeCloneId: 0,
+    activeCloneId: { value: -1, startDay: 0 },
     selectedPlayers: [],
     submitSelection: false,
   },
@@ -79,7 +81,10 @@ const gameSlice = createSlice({
       state.game.selectedPlayers = [];
       state.game.submitSelection = false;
     },
-    setActiveCloneId: (state, action: PayloadAction<number>) => {
+    setActiveCloneId: (
+      state,
+      action: PayloadAction<{ value: number; startDay: number }>
+    ) => {
       state.game.activeCloneId = action.payload;
     },
     setSelectedPlayers: (state, action: PayloadAction<number[]>) => {
@@ -103,6 +108,14 @@ const gameSlice = createSlice({
           action.payload.name;
       }
     },
+    setPersonInfected: (state, action: PayloadAction<number>) => {
+      console.log("action.payload");
+      console.log(action.payload);
+      state.game.activeCloneId = {
+        value: action.payload,
+        startDay: state.game.day + 1,
+      };
+    },
   },
 });
 
@@ -119,6 +132,7 @@ export const {
   setSubmitSelectedPlayers,
   addMessage,
   setPlayerName,
+  setPersonInfected,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

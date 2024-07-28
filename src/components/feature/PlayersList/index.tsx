@@ -7,23 +7,25 @@ import { IPlayer } from "../../../redux/slices/types";
 
 interface PlayersListProps {
   maxSelected?: number;
-  filter?: "you" | "evil";
   onSelect?: (selected: number | number[]) => void;
+  filter?: number[] | null | "you";
 }
-
-const filterPlayers = (players, filter) => {
-  console.log(filter);
-  return players;
-};
 
 const PlayersList: FC<PlayersListProps> = ({
   maxSelected = 1,
-  filter = "you",
+  filter = null,
 }) => {
   const dispatch = useDispatch();
   const { players, submitSelection, selectedPlayers } = useSelector(
     (state: RootState) => state.game.game
   );
+
+  const filterPlayers = (players, filter: number[] | null | "you") => {
+    if (Array.isArray(filter)) {
+      return players.filter((player) => !filter.includes(player.id));
+    }
+    return players;
+  };
 
   const handleSelect = (playerId: number) => {
     if (submitSelection) return;

@@ -1,0 +1,9 @@
+.textSpot {
+  display: inline-block;
+  position: relative;
+  top: 0.15em;
+  border-radius: 0.15rem;
+  width: 1ch;
+  height: 1em;
+  background-color: #f59e0b;
+}

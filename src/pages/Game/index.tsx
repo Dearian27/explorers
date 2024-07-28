@@ -1,145 +1,52 @@
-import { useState } from "react";
 import BottomPanel from "../../components/layout/BottomPanel";
 import Button from "../../components/common/Button";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import "./styles.css";
-import {
-  addMessage,
-  initPlayers,
-  resetNightData,
-  setActiveCloneId,
-  setIsNight,
-  setNextCurrentPlayer,
-  setNextDay,
-  setPlayerName,
-  setSelectedPlayers,
-  setSubmitSelectedPlayers,
-} from "../../redux/slices/GameSlice";
 import PhaseLayout from "../../components/layout/PhaseLayout";
 import PlayersList from "../../components/feature/PlayersList";
 import Textarea from "../../components/common/Textarea";
 import Cover from "./Cover";
-import { IPlayer } from "../../redux/slices/types";
 import Message from "../../components/common/Message";
 import Input from "../../components/common/Input";
-
-function shuffleArray(array: Array<IPlayer>) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]]; // обмін значень
-  }
-  return array;
-}
-
-const createStarterRoles: (
-  count: number
-) => { name: string; role: string; id: number }[] = (playersCount) => {
-  return [
-    {
-      name: "clone",
-      count: 1,
-    },
-    { name: "interceptor", count: 1 },
-    { name: "explorer", count: playersCount - 2 },
-  ].reduce((acc, role) => {
-    const expanded = Array(role.count).fill({ name: role.name });
-    return acc.concat(expanded);
-  }, []);
-};
+import BadVisionedText from "../../components/feature/BadVisionedText";
+import { useGameProps } from "./GameProvider";
 
 const Game = () => {
-  const dispatch = useDispatch();
+  const {
+    playerInterfaceShow,
+    setPlayerInterfaceShow,
+    name,
+    setName,
+    blueTeamPoints,
+    setBlueTeamPoints,
+    setRedTeamPoints,
+    redTeamPoints,
+    infectPerson,
+    setNextPlayer,
+    checkIsActiveClone,
+    toggleNightHandler,
+    startGame,
+    setMessage,
+    message,
+    wasActiveClone,
+  } = useGameProps();
 
   const {
     currentPlayer,
     players,
-    isNight,
     playersCount,
     selectedPlayers,
     day,
-    activeCloneId,
     messages,
     submitSelection,
+    activeCloneId,
+    additionalSettings: { isInterceptorsViewClear },
   } = useSelector((state: RootState) => state.game.game);
-  const [redTeamPoints, setRedTeamPoints] = useState(0);
-  const [blueTeamPoints, setBlueTeamPoints] = useState(0);
-
-  const [playerInterfaceShow, setPlayerInterfaceShow] = useState(-1);
-  const [message, setMessage] = useState("");
-  const [name, setName] = useState("");
-
-  const sendCloneMessage = () => {
-    dispatch(
-      addMessage({
-        type: "clone",
-        id: 1,
-        text: message,
-        senderId: players[currentPlayer].id,
-        sendDay: day,
-        receiptDay: day + 1,
-        receiversId: selectedPlayers,
-      })
-    ); //!FIX ME (id)
-    setMessage("");
-  };
-
-  const toggleNightHandler = () => {
-    dispatch(setIsNight(!isNight));
-  };
-
-  const startGame = (playersCount: number) => {
-    const players: IPlayer[] = shuffleArray(
-      createStarterRoles(playersCount).map((role) => {
-        return {
-          id: 0,
-          disabledCellIds: [],
-          role: role.name,
-          name: "",
-          isClone: role.name === "clone" ? true : false,
-        };
-      })
-    ).map((p, id: number) => ({
-      ...p,
-      disabledCellIds: [id],
-      id,
-    }));
-    dispatch(initPlayers(players));
-    dispatch(setNextDay());
-    dispatch(
-      setActiveCloneId(
-        players.find((p: IPlayer) => {
-          return p?.role === "clone";
-        })?.id
-      )
-    );
-  };
-  const infectPerson = () => {
-    dispatch(setSubmitSelectedPlayers(true));
-  };
-  const setNextPlayer = () => {
-    if (submitSelection && message) sendCloneMessage();
-    if (day === 1) {
-      dispatch(setPlayerName({ id: players[currentPlayer]?.id, name }));
-      setName("");
-    }
-    dispatch(setSubmitSelectedPlayers(false));
-    dispatch(setSelectedPlayers([]));
-    if (currentPlayer < players.length - 1) {
-      dispatch(setNextCurrentPlayer());
-    } else {
-      endNight();
-    }
-  };
-  const endNight = () => {
-    dispatch(setIsNight(!isNight));
-    dispatch(resetNightData());
-    dispatch(setNextDay());
-  };
 
   return (
     <>
-      <PhaseLayout type="night">
+      <PhaseLayout dayPhase="night">
         <div className="w-full h-full p-4 pb-16 gap-4 flex flex-col">
           {playerInterfaceShow !== currentPlayer && (
             <Cover
@@ -153,7 +60,12 @@ const Game = () => {
           <h1 className="text-2xl font-bold self-center uppercase">
             {players[currentPlayer]?.role}
           </h1>
-          {day === 1 && (
+          <h2 className="flex flex-col">
+            <span>Ніч: {day}</span>
+            <span>наступне вбивство: {activeCloneId.startDay}</span>
+            <span>активний клон: {activeCloneId.value}</span>
+          </h2>
+          <PhaseLayout currentDay={1}>
             <Input
               max={10}
               containerClassName="self-center"
@@ -161,11 +73,16 @@ const Game = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-          )}
+          </PhaseLayout>
 
-          {players[currentPlayer]?.id === activeCloneId && (
+          {(checkIsActiveClone(players[currentPlayer]?.id) ||
+            wasActiveClone) && (
             <>
-              <PlayersList maxSelected={1} />
+              <h1 className="text-xl font-semibold">Виберіть вашу жертву:</h1>
+              <PlayersList
+                filter={players[currentPlayer]?.disabledCellIds}
+                maxSelected={1}
+              />
               <Textarea
                 value={message}
                 setValue={setMessage}
@@ -174,6 +91,23 @@ const Game = () => {
               />
             </>
           )}
+          {messages
+            ?.filter(
+              (message) =>
+                message.type === "clone" &&
+                message.receiptDay === day &&
+                message.receiversId.includes(players[currentPlayer].id)
+            )
+            ?.map((message, index) => (
+              <Message
+                receiver={"YOU"}
+                key={index}
+                day={message.sendDay}
+                type={message.type}
+              >
+                {message.text}
+              </Message>
+            ))}
           {players[currentPlayer]?.role === "interceptor" && (
             <>
               {messages
@@ -195,12 +129,25 @@ const Game = () => {
         </div>
       </PhaseLayout>
 
-      <PhaseLayout type="day">
+      <PhaseLayout dayPhase="day">
         <div>
           <header className="w-full bg-gray-200 p-4 flex justify-between">
             <h1>День: {day}</h1>
           </header>
           <div className="flex-1 flex flex-col">
+            <Message
+              type="clone"
+              className="max-w-[60%]  bg-yellow-300 !shadow-none"
+              receiverClassName="text-amber-500"
+              senderClassName="text-amber-500"
+              day={1}
+            >
+              {isInterceptorsViewClear ? (
+                <BadVisionedText text="some text about last night" />
+              ) : (
+                "some text about last night"
+              )}
+            </Message>
             <div className="flex bg-blue-200 self-start">
               <input
                 readOnly
@@ -253,14 +200,18 @@ const Game = () => {
         </div>
       </PhaseLayout>
       <BottomPanel className="justify-end">
-        <PhaseLayout type="night">
-          {players[currentPlayer]?.id === activeCloneId && (
+        <PhaseLayout dayPhase="night">
+          <span>
+            {currentPlayer}/{players[currentPlayer]?.id}
+          </span>
+          {(checkIsActiveClone(players[currentPlayer]?.id) ||
+            wasActiveClone) && (
             <Button
               disabled={!selectedPlayers.length}
               freezeActive={true}
               clickedClassName="!text-red-300"
               className="btn3d bg-rose-700 !shadow-red-800"
-              onClick={() => infectPerson()}
+              onClick={() => !submitSelection && infectPerson()}
             >
               INFECT
             </Button>
@@ -275,7 +226,7 @@ const Game = () => {
               : "Завершити хід"}
           </Button>
         </PhaseLayout>
-        <PhaseLayout type="day">
+        <PhaseLayout dayPhase="day">
           {day === 0 ? (
             <button
               onClick={() => startGame(5)}

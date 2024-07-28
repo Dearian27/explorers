@@ -4,13 +4,22 @@ import { RootState } from "../../redux/store";
 
 const PhaseLayout = ({
   children,
-  type,
+  dayPhase,
+  startDay,
+  currentDay,
 }: {
   children: React.ReactNode;
-  type: "night" | "day";
+  dayPhase?: "night" | "day";
+  currentDay?: number;
+  startDay?: number;
 }) => {
-  const isNight = useSelector((state: RootState) => state.game.game.isNight);
-  if ((type === "day" && !isNight) || (type === "night" && isNight))
+  const { isNight, day } = useSelector((state: RootState) => state.game.game);
+  if (
+    (dayPhase === "day" && !isNight) ||
+    (dayPhase === "night" && isNight) ||
+    currentDay === day ||
+    startDay <= day
+  )
     return <>{children}</>;
 };
 

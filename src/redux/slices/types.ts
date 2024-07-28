@@ -4,5 +4,6 @@ export interface IPlayer {
   name: string;
   role: string;
   isClone: boolean;
+  wasClone: boolean;
   disabledCellIds: number[];
 }
