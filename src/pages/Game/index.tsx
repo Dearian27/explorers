@@ -40,11 +40,23 @@ const Game = () => {
     playersCount,
     selectedPlayers,
     day,
+    activeCloneId,
     messages,
     submitSelection,
     additionalSettings: { isInterceptorsViewClear },
   } = useSelector((state: RootState) => state.game.game);
   const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   setClonesCount(
+  //     players.reduce((acc, next) => {
+  //       if (next.isClone) acc += 1;
+  //     }, 0)
+  //   );
+  // }, []);
+
+  console.log(players);
+  console.log(activeCloneId);
   return (
     <>
       <PhaseLayout dayPhase="night">
@@ -66,6 +78,16 @@ const Game = () => {
           >
             {players[currentPlayer]?.role}
           </h1>
+          {players[currentPlayer]?.isClone &&
+            players[currentPlayer].role !== "clone" && (
+              <h1
+                className={twMerge(
+                  "text-md font-semibold self-center text-red-600 mt-[-1.2rem]"
+                )}
+              >
+                уражений клоном
+              </h1>
+            )}
           <h2 className="flex flex-col">
             <span>Ніч: {day}</span>
           </h2>
@@ -138,6 +160,11 @@ const Game = () => {
         <div>
           <header className="w-full bg-gray-200 p-4 flex justify-between">
             <h1>День: {day}</h1>
+            <h1>
+              Клонів:{" "}
+              {players.reduce((acc, next) => (next.isClone ? acc + 1 : acc), 0)}
+              /{players.length}
+            </h1>
             <Button onClick={() => dispatch(setIsGameStarted(true))}>
               Other screen
             </Button>

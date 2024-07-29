@@ -123,10 +123,10 @@ export const GameProvider = ({ children }) => {
   const toggleNightHandler = () => {
     dispatch(setIsNight(!isNight));
     if (
-      activeCloneId.value === players[currentPlayer + 1]?.id &&
+      activeCloneId.value === players[currentPlayer]?.id &&
       activeCloneId.startDay <= day
     ) {
-      markPlayerAsClone(players[currentPlayer + 1].id);
+      dispatch(markPlayerAsClone(players[currentPlayer].id));
     }
   };
 
@@ -175,13 +175,13 @@ export const GameProvider = ({ children }) => {
     if (submitSelection && message) sendCloneMessage();
     resetTurnData();
     if (currentPlayer < players.length - 1) {
-      dispatch(setNextCurrentPlayer());
       if (
         activeCloneId.value === players[currentPlayer + 1]?.id &&
         activeCloneId.startDay <= day
       ) {
-        markPlayerAsClone(players[currentPlayer + 1].id);
+        dispatch(markPlayerAsClone(players[currentPlayer + 1].id));
       }
+      dispatch(setNextCurrentPlayer());
     } else {
       endNight();
     }
