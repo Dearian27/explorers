@@ -7,10 +7,12 @@ interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
   onClick?: () => void;
   clickedClassName?: string;
   freezeActive?: boolean;
+  styleType?: "blood" | "default";
 }
 
 const Button: FC<ButtonProps> = ({
   children,
+  styleType = "default",
   onClick,
   className = "",
   clickedClassName = "",
@@ -61,8 +63,10 @@ const Button: FC<ButtonProps> = ({
       id="bloodButton"
       ref={buttonRef}
       onClick={(e) => {
-        if (!wasClicked) handleClick(e);
-        setWasClicked(true);
+        if (styleType === "blood") {
+          if (!wasClicked) handleClick(e);
+          setWasClicked(true);
+        }
         onClick?.();
       }}
       className={twMerge(

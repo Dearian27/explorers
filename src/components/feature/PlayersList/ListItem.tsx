@@ -25,9 +25,9 @@ const ListItem: FC<PlayerListItemProps> = ({
     <button
       {...props}
       className={twMerge(
-        "h-14 w-14 text-2xl cursor-pointer font-bold active:translate-y-1 rounded-lg bg-gray-300 hover:bg-gray-200 transition flex items-center justify-center",
+        "h-10 w-10 text-lg cursor-pointer font-bold active:translate-y-1 rounded-lg bg-gray-300 hover:bg-gray-200 transition flex items-center justify-center",
         isSelected &&
-          "bg-gray-200 border-[0.3rem] border-gray-400 translate-y-1",
+          "bg-gray-200 border-[0.2rem] border-gray-400 translate-y-1",
         isSubmitted && selectedPlayers.includes(playerId) && submitClassName
       )}
     >

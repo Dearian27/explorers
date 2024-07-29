@@ -217,6 +217,7 @@ const Game = () => {
             <Button
               disabled={!selectedPlayers.length}
               freezeActive={true}
+              styleType="blood"
               clickedClassName="!text-red-300"
               className="btn3d bg-rose-700 !shadow-red-800"
               onClick={() => !submitSelection && infectPerson()}
