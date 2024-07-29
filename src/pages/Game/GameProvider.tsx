@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   Dispatch,
@@ -9,10 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import {
   addMessage,
-  initPlayers,
   markPlayerAsClone,
   resetNightData,
-  setActiveCloneId,
   setIsNight,
   setNextCurrentPlayer,
   setNextDay,
@@ -21,7 +20,6 @@ import {
   setSelectedPlayers,
   setSubmitSelectedPlayers,
 } from "../../redux/slices/GameSlice";
-import { IPlayer } from "../../redux/slices/types";
 
 interface GameContextParams {
   message: string;
@@ -39,37 +37,12 @@ interface GameContextParams {
   toggleNightHandler: () => void;
   sendCloneMessage: () => void;
   checkIsActiveClone: (id: number) => boolean;
-  startGame: (playersCount: number) => void;
   infectPerson: () => void;
   wasActiveClone: boolean;
   setWasActiveClone: Dispatch<SetStateAction<boolean>>;
   timerEnd: boolean;
   setTimerEnd: Dispatch<SetStateAction<boolean>>;
 }
-
-function shuffleArray(array: Array<IPlayer>) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]]; // обмін значень
-  }
-  return array;
-}
-
-const createStarterRoles: (
-  count: number
-) => { name: string; role: string; id: number }[] = (playersCount) => {
-  return [
-    {
-      name: "clone",
-      count: 1,
-    },
-    { name: "interceptor", count: 1 },
-    { name: "explorer", count: playersCount - 2 },
-  ].reduce((acc, role) => {
-    const expanded = Array(role.count).fill({ name: role.name });
-    return acc.concat(expanded);
-  }, []);
-};
 
 const GameContext = createContext<GameContextParams>(null!);
 
@@ -87,7 +60,6 @@ export const GameProvider = ({ children }) => {
     selectedPlayers,
     day,
     activeCloneId,
-    additionalSettings: { firstInfectDay },
     submitSelection,
     messages,
   } = useSelector((state: RootState) => state.game.game);
@@ -133,33 +105,6 @@ export const GameProvider = ({ children }) => {
     }
   };
 
-  const startGame = (playersCount: number) => {
-    const players: IPlayer[] = shuffleArray(
-      createStarterRoles(playersCount).map((role) => {
-        return {
-          id: 0,
-          disabledCellIds: [],
-          role: role.name,
-          name: "",
-          isClone: role.name === "clone" ? true : false,
-        };
-      })
-    ).map((p, id: number) => ({
-      ...p,
-      disabledCellIds: [id],
-      id,
-    }));
-    dispatch(initPlayers(players));
-    dispatch(setNextDay());
-    dispatch(
-      setActiveCloneId({
-        value: players.find((p: IPlayer) => {
-          return p?.role === "clone";
-        })?.id,
-        startDay: firstInfectDay,
-      })
-    );
-  };
   const resetTurnData = () => {
     setWasActiveClone(false);
     if (day === 1) {
@@ -215,7 +160,6 @@ export const GameProvider = ({ children }) => {
         toggleNightHandler,
         sendCloneMessage,
         checkIsActiveClone,
-        startGame,
         infectPerson,
         wasActiveClone,
         setWasActiveClone,

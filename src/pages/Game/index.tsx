@@ -1,6 +1,6 @@
 import BottomPanel from "../../components/layout/BottomPanel";
 import Button from "../../components/common/Button";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import "./styles.css";
 import PhaseLayout from "../../components/layout/PhaseLayout";
@@ -12,7 +12,6 @@ import Input from "../../components/common/Input";
 import BadVisionedText from "../../components/feature/BadVisionedText";
 import { useGameProps } from "./GameProvider";
 import { twMerge } from "tailwind-merge";
-import { setIsGameStarted } from "../../redux/slices/GameSlice";
 import Timer from "../../components/feature/Timer";
 
 const Game = () => {
@@ -29,7 +28,6 @@ const Game = () => {
     setNextPlayer,
     checkIsActiveClone,
     toggleNightHandler,
-    startGame,
     setMessage,
     message,
     wasActiveClone,
@@ -47,7 +45,7 @@ const Game = () => {
     submitSelection,
     additionalSettings: { isInterceptorsViewClear },
   } = useSelector((state: RootState) => state.game.game);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   return (
     <>
@@ -157,9 +155,6 @@ const Game = () => {
               {players.reduce((acc, next) => (next.isClone ? acc + 1 : acc), 0)}
               /{players.length}
             </h1>
-            <Button onClick={() => dispatch(setIsGameStarted(true))}>
-              Other screen
-            </Button>
           </header>
           <div className="flex-1 flex flex-col">
             <Message
@@ -263,21 +258,12 @@ const Game = () => {
           </Button>
         </PhaseLayout>
         <PhaseLayout dayPhase="day">
-          {day === 0 ? (
-            <button
-              onClick={() => startGame(5)}
-              className="btn3d bg-cyan-400 shadow-cyan-500"
-            >
-              Розпочати гру
-            </button>
-          ) : (
-            <button
-              onClick={() => toggleNightHandler()}
-              className="btn3d bg-cyan-400 shadow-cyan-500"
-            >
-              Розпочати ніч
-            </button>
-          )}
+          <button
+            onClick={() => toggleNightHandler()}
+            className="btn3d bg-cyan-400 shadow-cyan-500"
+          >
+            Розпочати ніч
+          </button>
         </PhaseLayout>
       </BottomPanel>
     </>

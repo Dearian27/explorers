@@ -11,12 +11,16 @@ interface NumberInputProps extends ComponentPropsWithoutRef<"input"> {
   minusClassName?: string;
   min?: number;
   styleType?: "default" | "small";
+  plusDisabled?: boolean;
+  minusDisabled?: boolean;
 }
 
 const NumberInput: FC<NumberInputProps> = ({
   value,
   setValue,
   min = 0,
+  plusDisabled,
+  minusDisabled,
   containerClassName = "",
   buttonClassName = "",
   buttonsContainerClassName = "",
@@ -55,6 +59,7 @@ const NumberInput: FC<NumberInputProps> = ({
             buttonClassName,
             plusClassName
           )}
+          disabled={plusDisabled}
           onClick={() => setValue(value + 1)}
         >
           +
@@ -67,7 +72,7 @@ const NumberInput: FC<NumberInputProps> = ({
             minusClassName
           )}
           onClick={() => setValue(value - 1 >= min ? value - 1 : value)}
-          disabled={value <= min}
+          disabled={value <= min || minusDisabled}
         >
           -
         </button>

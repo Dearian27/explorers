@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { IPlayer } from "./types";
-import { PlayerMessage } from "../../types";
+import { PlayerMessage, RoleParams } from "../../types";
 
 export interface CounterState {
   isGameStarted: boolean;
+  selectedRoles: (RoleParams & { count: number })[];
   game: {
     isNight: boolean;
     day: number;
@@ -25,6 +26,7 @@ export interface CounterState {
 
 const initialState: CounterState = {
   isGameStarted: false,
+  selectedRoles: [],
   // game: {
   //   additionalSettings: {
   //     isInterceptorsViewClear: true,
