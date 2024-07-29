@@ -43,6 +43,8 @@ interface GameContextParams {
   infectPerson: () => void;
   wasActiveClone: boolean;
   setWasActiveClone: Dispatch<SetStateAction<boolean>>;
+  timerEnd: boolean;
+  setTimerEnd: Dispatch<SetStateAction<boolean>>;
 }
 
 function shuffleArray(array: Array<IPlayer>) {
@@ -98,6 +100,7 @@ export const GameProvider = ({ children }) => {
   const [playerInterfaceShow, setPlayerInterfaceShow] = useState(-1);
   const [message, setMessage] = useState("");
   const [name, setName] = useState("");
+  const [timerEnd, setTimerEnd] = useState(false);
 
   const checkIsActiveClone = (id: number) => {
     return activeCloneId.value === id && day >= activeCloneId.startDay;
@@ -165,6 +168,7 @@ export const GameProvider = ({ children }) => {
     }
     dispatch(setSubmitSelectedPlayers(false));
     dispatch(setSelectedPlayers([]));
+    setTimerEnd(false);
   };
   const infectPerson = () => {
     setWasActiveClone(true);
@@ -215,6 +219,8 @@ export const GameProvider = ({ children }) => {
         infectPerson,
         wasActiveClone,
         setWasActiveClone,
+        timerEnd,
+        setTimerEnd,
       }}
     >
       {children}

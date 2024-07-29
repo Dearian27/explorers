@@ -13,6 +13,7 @@ import BadVisionedText from "../../components/feature/BadVisionedText";
 import { useGameProps } from "./GameProvider";
 import { twMerge } from "tailwind-merge";
 import { setIsGameStarted } from "../../redux/slices/GameSlice";
+import Timer from "../../components/feature/Timer";
 
 const Game = () => {
   const {
@@ -32,6 +33,8 @@ const Game = () => {
     setMessage,
     message,
     wasActiveClone,
+    timerEnd,
+    setTimerEnd,
   } = useGameProps();
 
   const {
@@ -40,23 +43,12 @@ const Game = () => {
     playersCount,
     selectedPlayers,
     day,
-    activeCloneId,
     messages,
     submitSelection,
     additionalSettings: { isInterceptorsViewClear },
   } = useSelector((state: RootState) => state.game.game);
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   setClonesCount(
-  //     players.reduce((acc, next) => {
-  //       if (next.isClone) acc += 1;
-  //     }, 0)
-  //   );
-  // }, []);
-
-  console.log(players);
-  console.log(activeCloneId);
   return (
     <>
       <PhaseLayout dayPhase="night">
@@ -253,13 +245,21 @@ const Game = () => {
             </Button>
           )}
           <Button
-            disabled={day === 1 && !name}
+            disabled={
+              (day === 1 && !name) || (currentPlayer === 0 && !timerEnd)
+            }
             onClick={() => setNextPlayer()}
             className="btn3d bg-cyan-400 shadow-cyan-500"
           >
             {currentPlayer === playersCount - 1
               ? "Завершити ніч"
               : "Завершити хід"}
+            {currentPlayer === 0 && (
+              <>
+                {" "}
+                <Timer duration={10} onEnd={() => setTimerEnd(true)} />
+              </>
+            )}
           </Button>
         </PhaseLayout>
         <PhaseLayout dayPhase="day">
