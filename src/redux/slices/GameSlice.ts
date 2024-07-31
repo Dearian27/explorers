@@ -45,7 +45,7 @@ const initialState: CounterState = {
     },
     messages: [],
     infectNights: [1, 3, 4, 6],
-    playersCount: 10,
+    playersCount: 0,
     players: [],
     currentPlayer: 0,
     activeCloneId: { value: -1, startDay: 0 },
