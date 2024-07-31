@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import BottomPanel from "../../components/layout/BottomPanel";
 import Button from "../../components/common/Button";
 import { useSelector } from "react-redux";
@@ -7,12 +8,13 @@ import PhaseLayout from "../../components/layout/PhaseLayout";
 import PlayersList from "../../components/feature/PlayersList";
 import Textarea from "../../components/common/Textarea";
 import Cover from "./Cover";
-import Message from "../../components/common/Message";
 import Input from "../../components/common/Input";
-import BadVisionedText from "../../components/feature/BadVisionedText";
 import { useGameProps } from "./GameProvider";
 import { twMerge } from "tailwind-merge";
 import Timer from "../../components/feature/Timer";
+import InterceptorIF from "../../components/interfaces/InterceptorIF";
+import PlayersMessagesIF from "../../components/interfaces/PlayersMessagesIF";
+import PlayerRoleTitle from "../../components/interfaces/PlayerRoleTitle";
 
 const Game = () => {
   const {
@@ -22,8 +24,6 @@ const Game = () => {
     setName,
     blueTeamPoints,
     setBlueTeamPoints,
-    setRedTeamPoints,
-    redTeamPoints,
     infectPerson,
     setNextPlayer,
     checkIsActiveClone,
@@ -41,9 +41,8 @@ const Game = () => {
     playersCount,
     selectedPlayers,
     day,
-    messages,
     submitSelection,
-    additionalSettings: { isInterceptorsViewClear },
+    // additionalSettings: { isInterceptorsViewClear },
   } = useSelector((state: RootState) => state.game.game);
   // const dispatch = useDispatch();
 
@@ -60,24 +59,7 @@ const Game = () => {
               }}
             />
           )}
-          <h1
-            className={twMerge(
-              "text-2xl font-bold self-center uppercase",
-              players[currentPlayer]?.isClone && "text-red-500"
-            )}
-          >
-            {players[currentPlayer]?.role}
-          </h1>
-          {players[currentPlayer]?.isClone &&
-            players[currentPlayer].role !== "clone" && (
-              <h1
-                className={twMerge(
-                  "text-md font-semibold self-center text-red-600 mt-[-1.2rem]"
-                )}
-              >
-                уражений клоном
-              </h1>
-            )}
+          <PlayerRoleTitle />
           <h2 className="flex flex-col">
             <span>Ніч: {day}</span>
           </h2>
@@ -108,68 +90,25 @@ const Game = () => {
               />
             </>
           )}
-          {messages
-            ?.filter(
-              (message) =>
-                message.type === "clone" &&
-                message.receiptDay === day &&
-                message.receiversId.includes(players[currentPlayer].id)
-            )
-            ?.map((message, index) => (
-              <Message
-                receiver={"YOU"}
-                key={index}
-                day={message.sendDay}
-                type={message.type}
-              >
-                {message.text}
-              </Message>
-            ))}
-          {players[currentPlayer]?.role === "interceptor" && (
-            <>
-              {messages
-                ?.filter(
-                  (message) =>
-                    message.type === "clone" && message.receiptDay === day
-                )
-                ?.map((message, index) => (
-                  <Message
-                    key={index}
-                    day={message.sendDay}
-                    type={message.type}
-                  >
-                    {message.text}
-                  </Message>
-                ))}
-            </>
-          )}
+
+          <PlayersMessagesIF />
+
+          <InterceptorIF />
         </div>
       </PhaseLayout>
 
       <PhaseLayout dayPhase="day">
         <div>
-          <header className="w-full bg-gray-200 p-4 flex justify-between">
-            <h1>День: {day}</h1>
+          <header className="w-full bg-gray-100 p-4 flex justify-between">
+            <h1 className="text-md font-bold">День: {day}</h1>
             <h1>
               Клонів:{" "}
               {players.reduce((acc, next) => (next.isClone ? acc + 1 : acc), 0)}
               /{players.length}
+              (тимчасово)
             </h1>
           </header>
           <div className="flex-1 flex flex-col">
-            <Message
-              type="clone"
-              className="max-w-[60%]  bg-yellow-300 !shadow-none"
-              receiverClassName="text-amber-500"
-              senderClassName="text-amber-500"
-              day={1}
-            >
-              {isInterceptorsViewClear ? (
-                <BadVisionedText text="some text about last night" />
-              ) : (
-                "some text about last night"
-              )}
-            </Message>
             <div className="flex bg-blue-200 self-start">
               <input
                 readOnly
@@ -194,7 +133,7 @@ const Game = () => {
                 </button>
               </div>
             </div>
-            <div className="flex bg-red-200 self-start">
+            {/* <div className="flex bg-red-200 self-start">
               <input
                 readOnly
                 value={redTeamPoints}
@@ -217,7 +156,7 @@ const Game = () => {
                   -
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </PhaseLayout>
@@ -233,7 +172,7 @@ const Game = () => {
               freezeActive={true}
               styleType="blood"
               clickedClassName="!text-red-300"
-              className="btn3d bg-rose-700 !shadow-red-800"
+              className="btn3d bg-accent !shadow-red-800"
               onClick={() => !submitSelection && infectPerson()}
             >
               INFECT
