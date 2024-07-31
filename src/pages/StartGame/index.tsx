@@ -23,26 +23,37 @@ const StartGame = () => {
     additionalSettings: { firstInfectDay },
   } = useSelector((state: RootState) => state.game.game);
   const [playersCount, setPlayersCount] = useState<number>(5);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [roles, setRoles] = useState<(RoleParams & { count: number })[]>(
     rolesJSON.map((el) => ({ ...el, count: el.minCount || 0 }))
   );
+  const [activeRoles, setActiveRoles] = useState<
+    (RoleParams & { count: number })[]
+  >(rolesJSON.map((el) => ({ ...el, count: el.minCount || 0 })));
+
   const [errorText, setErrorText] = useState("");
   const [startDisabled, setStartDisabled] = useState(true);
 
   const checkChosenRoles = () => {
     //! return true if is not allowed
-    if (roles.reduce((acc, role) => acc + role.count, 0) > playersCount) {
+    if (activeRoles.reduce((acc, role) => acc + role.count, 0) > playersCount) {
       setErrorText("Кількість ролей не співпадає із к-стю гравців");
       setStartDisabled(true);
     } else if (
-      roles.reduce((acc, role) => acc + role.count, 0) !== playersCount
+      activeRoles.reduce((acc, role) => acc + role.count, 0) !== playersCount
     ) {
       setStartDisabled(true);
     } else if (
-      roles.reduce((acc, role) => (role.isEvil ? acc + role.count : acc), 0) >=
+      activeRoles.reduce(
+        (acc, role) => (role.isEvil ? acc + role.count : acc),
+        0
+      ) >=
       playersCount / 2
     ) {
       setErrorText("Кількість клонів має бути меншою за половину гравців");
+      setStartDisabled(true);
+    } else if (!activeRoles.find((role) => role.isEvil)) {
+      setErrorText("Кількість клонів має бути мінімум 1");
       setStartDisabled(true);
     } else {
       setErrorText("");
@@ -52,7 +63,7 @@ const StartGame = () => {
 
   useMemo(() => {
     checkChosenRoles();
-  }, [roles, playersCount]);
+  }, [activeRoles, playersCount]);
 
   function shuffleArray(array: Array<IPlayer>) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -62,8 +73,11 @@ const StartGame = () => {
     return array;
   }
 
-  const normalizeRoles: () => (RoleParams & { count: number })[] = () => {
-    return roles
+  const normalizeRoles: () => (RoleParams & {
+    count: number;
+    isActive: boolean;
+  })[] = () => {
+    return activeRoles
       ?.filter((role) => role.count > 0)
       .reduce((acc, role) => {
         const expanded = Array(role.count).fill({ name: role.name });
@@ -113,7 +127,11 @@ const StartGame = () => {
       </div>
 
       <h2 className="text-xl font-bold">Ролі</h2>
-      <Roles roles={roles} setRoles={setRoles} playersCount={playersCount} />
+      <Roles
+        roles={activeRoles}
+        setRoles={setActiveRoles}
+        playersCount={playersCount}
+      />
 
       <BottomPanel className="flex justify-end z-10">
         <div

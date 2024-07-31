@@ -18,6 +18,10 @@ const Roles: FC<RolesProps> = ({ playersCount, roles, setRoles }) => {
     });
   };
 
+  const removeRole = (id: number) => {
+    setRoles((prev) => prev.filter((el) => el.id !== id));
+  };
+
   useEffect(() => {
     setRate(() => {
       const total = roles.reduce(
@@ -47,6 +51,7 @@ const Roles: FC<RolesProps> = ({ playersCount, roles, setRoles }) => {
             }
             role={role}
             setCount={(count: number) => handleSetRoleCount(role.id, count)}
+            removeRole={() => removeRole(role.id)}
           />
         ))}
       </div>

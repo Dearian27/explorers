@@ -10,4 +10,5 @@ export interface RoleItemProps {
   role: RoleParams & { count: number };
   setCount: (count: number) => void;
   disabled?: boolean;
+  removeRole: () => void;
 }
