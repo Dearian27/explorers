@@ -1,3 +1,4 @@
+import DebugPanel from "./components/DebugPanel";
 import Game from "./pages/Game";
 import { GameProvider } from "./pages/Game/GameProvider";
 // import Preview from "./pages/Preview";
@@ -10,7 +11,8 @@ function App() {
     (state: RootState) => state.game.isGameStarted
   );
   return (
-    <div className="relative flex flex-col items-stretch mx-auto max-w-[780px] min-h-[100dvh] bg-white">
+    <div className="relative flex flex-col items-stretch mx-auto max-w-[780px] min-h-[100dvh] bg-main">
+      <DebugPanel />
       {isGameStarted ? (
         <GameProvider>
           <Game />
