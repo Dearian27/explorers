@@ -12,6 +12,9 @@ export interface CounterState {
     additionalSettings: {
       firstInfectDay: number;
       isInterceptorsViewClear: boolean;
+      currentCycle: number;
+      maxCycle: number;
+      doubleNightCycle: boolean;
     };
     messages: PlayerMessage[];
     playersCount: number;
@@ -42,6 +45,9 @@ const initialState: CounterState = {
     additionalSettings: {
       isInterceptorsViewClear: true,
       firstInfectDay: 1,
+      currentCycle: 0,
+      maxCycle: 1,
+      doubleNightCycle: true,
     },
     messages: [],
     infectNights: [1, 3, 4, 6],
@@ -70,6 +76,7 @@ const gameSlice = createSlice({
     },
     setNextDay: (state) => {
       state.game.day += 1;
+      state.game.additionalSettings.currentCycle = 0;
     },
     initPlayers: (state, action: PayloadAction<IPlayer[]>) => {
       state.game.players = action.payload;
@@ -78,7 +85,7 @@ const gameSlice = createSlice({
     setNextCurrentPlayer: (state) => {
       state.game.currentPlayer += 1;
     },
-    resetNightData: (state) => {
+    resetNightRoundData: (state) => {
       state.game.currentPlayer = 0;
       state.game.selectedPlayers = [];
       state.game.submitSelection = false;
@@ -123,6 +130,9 @@ const gameSlice = createSlice({
     setIsGameStarted: (state, action: PayloadAction<boolean>) => {
       state.isGameStarted = action.payload;
     },
+    setNextCycle: (state) => {
+      state.game.additionalSettings.currentCycle += 1;
+    },
   },
 });
 
@@ -132,7 +142,7 @@ export const {
   setIsNight,
   initPlayers,
   setNextCurrentPlayer,
-  resetNightData,
+  resetNightRoundData,
   setActiveCloneId,
   setSelectedPlayers,
   clearSelectedPlayers,
@@ -142,6 +152,7 @@ export const {
   setPersonInfected,
   markPlayerAsClone,
   setIsGameStarted,
+  setNextCycle,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

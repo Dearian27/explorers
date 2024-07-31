@@ -15,6 +15,7 @@ import Timer from "../../components/feature/Timer";
 import InterceptorIF from "../../components/interfaces/InterceptorIF";
 import PlayersMessagesIF from "../../components/interfaces/PlayersMessagesIF";
 import PlayerRoleTitle from "../../components/interfaces/PlayerRoleTitle";
+import PlayerBottomIF from "../../components/interfaces/PlayerBottomIF";
 
 const Game = () => {
   const {
@@ -42,7 +43,7 @@ const Game = () => {
     selectedPlayers,
     day,
     submitSelection,
-    // additionalSettings: { isInterceptorsViewClear },
+    additionalSettings: { currentCycle },
   } = useSelector((state: RootState) => state.game.game);
   // const dispatch = useDispatch();
 
@@ -63,7 +64,7 @@ const Game = () => {
           <h2 className="flex flex-col">
             <span>Ніч: {day}</span>
           </h2>
-          <PhaseLayout currentDay={1}>
+          <PhaseLayout cycle={0} currentDay={1}>
             <Input
               max={10}
               containerClassName="self-center"
@@ -162,39 +163,7 @@ const Game = () => {
       </PhaseLayout>
       <BottomPanel className="justify-end">
         <PhaseLayout dayPhase="night">
-          <span>
-            {currentPlayer}/{players[currentPlayer]?.id}
-          </span>
-          {(checkIsActiveClone(players[currentPlayer]?.id) ||
-            wasActiveClone) && (
-            <Button
-              disabled={!selectedPlayers.length}
-              freezeActive={true}
-              styleType="blood"
-              clickedClassName="!text-red-300"
-              className="btn3d bg-accent !shadow-red-800"
-              onClick={() => !submitSelection && infectPerson()}
-            >
-              INFECT
-            </Button>
-          )}
-          <Button
-            disabled={
-              (day === 1 && !name) || (currentPlayer === 0 && !timerEnd)
-            }
-            onClick={() => setNextPlayer()}
-            className="btn3d bg-cyan-400 shadow-cyan-500"
-          >
-            {currentPlayer === playersCount - 1
-              ? "Завершити ніч"
-              : "Завершити хід"}
-            {currentPlayer === 0 && (
-              <>
-                {" "}
-                <Timer duration={10} onEnd={() => setTimerEnd(true)} />
-              </>
-            )}
-          </Button>
+          <PlayerBottomIF />
         </PhaseLayout>
         <PhaseLayout dayPhase="day">
           <button

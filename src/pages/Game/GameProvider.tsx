@@ -11,9 +11,10 @@ import { RootState } from "../../redux/store";
 import {
   addMessage,
   markPlayerAsClone,
-  resetNightData,
+  resetNightRoundData,
   setIsNight,
   setNextCurrentPlayer,
+  setNextCycle,
   setNextDay,
   setPersonInfected,
   setPlayerName,
@@ -62,6 +63,7 @@ export const GameProvider = ({ children }) => {
     activeCloneId,
     submitSelection,
     messages,
+    additionalSettings: { doubleNightCycle, currentCycle, maxCycle },
   } = useSelector((state: RootState) => state.game.game);
   const dispatch = useDispatch();
 
@@ -88,26 +90,30 @@ export const GameProvider = ({ children }) => {
         text: message,
         senderId: players[currentPlayer].id,
         sendDay: day,
-        receiptDay: day + 1,
+        receiptDay: doubleNightCycle ? day : day + 1,
         receiversId: selectedPlayers,
       })
     ); //!FIX ME (id)
     setMessage("");
   };
 
+  const checkSettingClone = () => {
+    if (
+      activeCloneId.value === players[currentPlayer + 1]?.id &&
+      (activeCloneId.startDay <= day || (doubleNightCycle && currentCycle > 0))
+    ) {
+      dispatch(markPlayerAsClone(players[currentPlayer + 1].id));
+    }
+  };
+
   const toggleNightHandler = () => {
     dispatch(setIsNight(!isNight));
-    if (
-      activeCloneId.value === players[currentPlayer]?.id &&
-      activeCloneId.startDay <= day
-    ) {
-      dispatch(markPlayerAsClone(players[currentPlayer].id));
-    }
+    checkSettingClone();
   };
 
   const resetTurnData = () => {
     setWasActiveClone(false);
-    if (day === 1) {
+    if (day === 1 && currentCycle === 0) {
       dispatch(setPlayerName({ id: players[currentPlayer]?.id, name }));
       setName("");
     }
@@ -124,20 +130,16 @@ export const GameProvider = ({ children }) => {
     if (submitSelection && message) sendCloneMessage();
     resetTurnData();
     if (currentPlayer < players.length - 1) {
-      if (
-        activeCloneId.value === players[currentPlayer + 1]?.id &&
-        activeCloneId.startDay <= day
-      ) {
-        dispatch(markPlayerAsClone(players[currentPlayer + 1].id));
-      }
+      checkSettingClone();
       dispatch(setNextCurrentPlayer());
-    } else {
-      endNight();
-    }
+    } else if (doubleNightCycle && currentCycle < maxCycle) {
+      dispatch(setNextCycle());
+      dispatch(resetNightRoundData());
+    } else endNight();
   };
   const endNight = () => {
     dispatch(setIsNight(!isNight));
-    dispatch(resetNightData());
+    dispatch(resetNightRoundData());
     dispatch(setNextDay());
   };
 

@@ -3,9 +3,13 @@ import Message from "../../common/Message";
 import { useSelector } from "react-redux";
 
 const PlayersMessagesIF = () => {
-  const { players, currentPlayer, messages, day } = useSelector(
-    (state: RootState) => state.game.game
-  );
+  const {
+    players,
+    currentPlayer,
+    messages,
+    day,
+    additionalSettings: { currentCycle, doubleNightCycle },
+  } = useSelector((state: RootState) => state.game.game);
 
   return (
     <>
@@ -15,7 +19,8 @@ const PlayersMessagesIF = () => {
           (message) =>
             message.type === "clone" &&
             message.receiptDay === day &&
-            message.receiversId.includes(players[currentPlayer].id)
+            message.receiversId.includes(players[currentPlayer].id) &&
+            (!doubleNightCycle || currentCycle !== 0)
         )
         ?.map((message, index) => (
           <Message
