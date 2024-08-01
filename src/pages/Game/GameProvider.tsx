@@ -97,12 +97,19 @@ export const GameProvider = ({ children }) => {
     setMessage("");
   };
 
-  const checkSettingClone = () => {
+  const checkSettingClone = (currentIndex = null) => {
     if (
-      activeCloneId.value === players[currentPlayer + 1]?.id &&
-      (activeCloneId.startDay <= day || (doubleNightCycle && currentCycle > 0))
+      activeCloneId.value ===
+        players[currentIndex !== null ? currentIndex : currentPlayer + 1]?.id &&
+      (activeCloneId.startDay <= day ||
+        (doubleNightCycle &&
+          (currentCycle > 0 || currentPlayer === players.length - 1)))
     ) {
-      dispatch(markPlayerAsClone(players[currentPlayer + 1].id));
+      dispatch(
+        markPlayerAsClone(
+          players[currentIndex !== null ? currentIndex : currentPlayer + 1].id
+        )
+      );
     }
   };
 
@@ -133,6 +140,7 @@ export const GameProvider = ({ children }) => {
       checkSettingClone();
       dispatch(setNextCurrentPlayer());
     } else if (doubleNightCycle && currentCycle < maxCycle) {
+      checkSettingClone(0); //? check first player
       dispatch(setNextCycle());
       dispatch(resetNightRoundData());
     } else endNight();

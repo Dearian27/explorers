@@ -8,7 +8,11 @@ const InterceptorIF = () => {
     currentPlayer,
     messages,
     day,
-    additionalSettings: { doubleNightCycle, currentCycle },
+    additionalSettings: {
+      doubleNightCycle,
+      currentCycle,
+      interceptorsVisionDelay,
+    },
   } = useSelector((state: RootState) => state.game.game);
   if (players[currentPlayer]?.role !== "interceptor") return;
 
@@ -18,7 +22,7 @@ const InterceptorIF = () => {
         ?.filter(
           (message) =>
             message.type === "clone" &&
-            message.receiptDay === day &&
+            message.receiptDay + interceptorsVisionDelay === day &&
             (!doubleNightCycle || currentCycle !== 0)
         )
         ?.map((message, index) => (

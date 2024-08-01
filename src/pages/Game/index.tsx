@@ -16,6 +16,7 @@ import InterceptorIF from "../../components/interfaces/InterceptorIF";
 import PlayersMessagesIF from "../../components/interfaces/PlayersMessagesIF";
 import PlayerRoleTitle from "../../components/interfaces/PlayerRoleTitle";
 import PlayerBottomIF from "../../components/interfaces/PlayerBottomIF";
+import PlayerNameInputIF from "../../components/interfaces/PlayerNameInputIF";
 
 const Game = () => {
   const {
@@ -51,28 +52,12 @@ const Game = () => {
     <>
       <PhaseLayout dayPhase="night">
         <div className="w-full h-full p-4 pb-16 gap-4 flex flex-col">
-          {playerInterfaceShow !== currentPlayer && (
-            <Cover
-              name={players[currentPlayer]?.name}
-              currentPlayer={currentPlayer + 1}
-              onComplete={() => {
-                setPlayerInterfaceShow(currentPlayer);
-              }}
-            />
-          )}
+          <Cover name={players[currentPlayer]?.name} />
           <PlayerRoleTitle />
-          <h2 className="flex flex-col">
+          {/* <h2 className="flex flex-col">
             <span>Ніч: {day}</span>
-          </h2>
-          <PhaseLayout cycle={0} currentDay={1}>
-            <Input
-              max={10}
-              containerClassName="self-center"
-              placeholder="Ім'я"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </PhaseLayout>
+          </h2> */}
+          <PlayerNameInputIF />
 
           {(checkIsActiveClone(players[currentPlayer]?.id) ||
             wasActiveClone) && (

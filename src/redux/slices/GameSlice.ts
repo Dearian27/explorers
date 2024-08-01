@@ -15,6 +15,7 @@ export interface CounterState {
       currentCycle: number;
       maxCycle: number;
       doubleNightCycle: boolean;
+      interceptorsVisionDelay: number;
     };
     messages: PlayerMessage[];
     playersCount: number;
@@ -48,6 +49,7 @@ const initialState: CounterState = {
       currentCycle: 0,
       maxCycle: 1,
       doubleNightCycle: true,
+      interceptorsVisionDelay: 0, //? interceptor starts catch messages with delay of X days
     },
     messages: [],
     infectNights: [1, 3, 4, 6],

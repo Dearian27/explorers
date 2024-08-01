@@ -41,7 +41,14 @@ const DebugPanel = () => {
             )}
           >
             {p?.id} {p.name} ({p.role})
-            {p.isClone && <div className="h-2 w-2 bg-accent" />}
+            {p.isClone && (
+              <div
+                className={twMerge(
+                  "h-2 w-2 bg-accent",
+                  activeCloneId.value === p.id && "h-3 w-3  bg-orange-500"
+                )}
+              />
+            )}
           </div>
         ))}
       </div>
