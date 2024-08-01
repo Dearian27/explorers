@@ -17,6 +17,9 @@ import PlayersMessagesIF from "../../components/interfaces/PlayersMessagesIF";
 import PlayerRoleTitle from "../../components/interfaces/PlayerRoleTitle";
 import PlayerBottomIF from "../../components/interfaces/PlayerBottomIF";
 import PlayerNameInputIF from "../../components/interfaces/PlayerNameInputIF";
+import Menu from "../../components/layout/Menu";
+import { useRef } from "react";
+import SpeechTimer from "../../components/feature/SpeechTimer";
 
 const Game = () => {
   const {
@@ -35,6 +38,8 @@ const Game = () => {
     wasActiveClone,
     timerEnd,
     setTimerEnd,
+    setOpenMenu,
+    openMenu,
   } = useGameProps();
 
   const {
@@ -48,8 +53,11 @@ const Game = () => {
   } = useSelector((state: RootState) => state.game.game);
   // const dispatch = useDispatch();
 
+  const buttonRef = useRef(null!);
+
   return (
     <>
+      <Menu buttonRef={buttonRef} />
       <PhaseLayout dayPhase="night">
         <div className="w-full h-full p-4 pb-16 gap-4 flex flex-col">
           <Cover name={players[currentPlayer]?.name} />
@@ -87,12 +95,12 @@ const Game = () => {
         <div>
           <header className="w-full bg-gray-100 p-4 flex justify-between">
             <h1 className="text-md font-bold">День: {day}</h1>
-            <h1>
-              Клонів:{" "}
-              {players.reduce((acc, next) => (next.isClone ? acc + 1 : acc), 0)}
-              /{players.length}
-              (тимчасово)
-            </h1>
+            <button
+              ref={buttonRef}
+              onClick={() => setOpenMenu((prev) => !prev)}
+            >
+              Меню
+            </button>
           </header>
           <div className="flex-1 flex flex-col">
             <div className="flex bg-blue-200 self-start">
@@ -119,30 +127,7 @@ const Game = () => {
                 </button>
               </div>
             </div>
-            {/* <div className="flex bg-red-200 self-start">
-              <input
-                readOnly
-                value={redTeamPoints}
-                type="number"
-                className="h-16 w-16 bg-transparent text-center text-[1.4rem] font-bold text-red-400"
-              />
-              <div className="flex flex-col  bg-red-300">
-                <button
-                  className="h-8 w-8 font-bold"
-                  onClick={() => setRedTeamPoints((prev) => prev + 1)}
-                >
-                  +
-                </button>
-                <button
-                  onClick={() =>
-                    setRedTeamPoints((prev) => (prev ? prev - 1 : prev))
-                  }
-                  className="h-8 w-8 font-bold"
-                >
-                  -
-                </button>
-              </div>
-            </div> */}
+            <SpeechTimer />
           </div>
         </div>
       </PhaseLayout>

@@ -35,6 +35,7 @@ const DebugPanel = () => {
       <div className="flex flex-wrap gap-1">
         {players.map((p) => (
           <div
+            key={p.id}
             className={twMerge(
               "bg-black px-2 py-1 rounded-md flex gap-1 items-center transition duration-500",
               players[currentPlayer]?.id === p.id && "bg-light text-dark"

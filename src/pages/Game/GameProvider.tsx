@@ -43,6 +43,8 @@ interface GameContextParams {
   setWasActiveClone: Dispatch<SetStateAction<boolean>>;
   timerEnd: boolean;
   setTimerEnd: Dispatch<SetStateAction<boolean>>;
+  openMenu: boolean;
+  setOpenMenu: Dispatch<SetStateAction<boolean>>;
 }
 
 const GameContext = createContext<GameContextParams>(null!);
@@ -75,6 +77,7 @@ export const GameProvider = ({ children }) => {
   const [message, setMessage] = useState("");
   const [name, setName] = useState("");
   const [timerEnd, setTimerEnd] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
 
   const checkIsActiveClone = (id: number) => {
     return activeCloneId.value === id && day >= activeCloneId.startDay;
@@ -175,6 +178,8 @@ export const GameProvider = ({ children }) => {
         setWasActiveClone,
         timerEnd,
         setTimerEnd,
+        openMenu,
+        setOpenMenu,
       }}
     >
       {children}
