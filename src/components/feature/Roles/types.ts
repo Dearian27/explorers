@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { RoleParams } from "../../../types";
+import { RoleParams } from "../../../redux/slices/types";
 
 export interface RolesProps {
   playersCount: number;

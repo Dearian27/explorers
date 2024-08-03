@@ -29,8 +29,7 @@ const StartGame = () => {
   );
   const [activeRoles, setActiveRoles] = useState<
     (RoleParams & { count: number })[]
-    //@ts-expect-error #fix me
-  >(rolesJSON.map((el) => ({ ...el, count: el.minCount || 0 })));
+  >(roles.map((el) => ({ ...el, count: el.minCount || 0 })));
 
   const [errorText, setErrorText] = useState("");
   const [startDisabled, setStartDisabled] = useState(true);
