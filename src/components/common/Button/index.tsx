@@ -65,8 +65,8 @@ const Button: FC<ButtonProps> = ({
       onClick={(e) => {
         if (styleType === "blood") {
           if (!wasClicked) handleClick(e);
-          setWasClicked(true);
         }
+        setWasClicked(true);
         onClick?.();
       }}
       className={twMerge(
@@ -74,7 +74,7 @@ const Button: FC<ButtonProps> = ({
         className,
         wasClicked &&
           freezeActive &&
-          `!translate-y-1 !shadow-none ${clickedClassName}`
+          `!translate-y-1 !shadow-none !cursor-default ${clickedClassName}`
       )}
     >
       {children}

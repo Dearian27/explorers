@@ -10,6 +10,8 @@ const DebugPanel = () => {
       day,
       currentPlayer,
       activeCloneId,
+      selectedPlayers,
+      submitSelection,
       additionalSettings: { currentCycle, maxCycle },
     },
   } = useSelector((state: RootState) => state.game);
@@ -18,13 +20,18 @@ const DebugPanel = () => {
 
   return (
     <div className="fixed top-2 right-2 w-80 bg-dark text-main flex flex-col gap-1 rounded-md p-2 font-mono">
-      <p className={twMerge(players.length !== playersCount && "text-accent")}>
+      <p
+        className={twMerge(
+          players.length !== playersCount && "text-accent font-bold"
+        )}
+      >
         players: {players.length} (playersCount: {playersCount})
         {players.length !== playersCount && " !!!!"}
       </p>
       <p
         className={twMerge(
-          currentPlayer !== players[currentPlayer]?.id && "text-accent"
+          currentPlayer !== players[currentPlayer]?.id &&
+            "text-accent font-bold"
         )}
       >
         currentPlayer: {currentPlayer} / {players[currentPlayer]?.id} (index/id)
@@ -32,6 +39,7 @@ const DebugPanel = () => {
       <p>
         day: {day} | cycle: {currentCycle}/{maxCycle}
       </p>
+      <hr className="my-1" />
       <div className="flex flex-wrap gap-1">
         {players.map((p) => (
           <div
@@ -53,9 +61,19 @@ const DebugPanel = () => {
           </div>
         ))}
       </div>
+      <hr className="my-1" />
       <p>
         activeCloneId: {activeCloneId?.value} (start day:{" "}
         {activeCloneId?.startDay})
+      </p>
+      <p>selectedPlayers: {selectedPlayers.join(", ")};</p>
+      <p>
+        submitted:{" "}
+        {submitSelection ? (
+          <span className="text-blue-400">true</span>
+        ) : (
+          "false"
+        )}
       </p>
     </div>
   );

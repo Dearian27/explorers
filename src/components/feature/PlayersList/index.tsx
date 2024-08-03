@@ -4,25 +4,35 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { setSelectedPlayers } from "../../../redux/slices/GameSlice";
 import { IPlayer } from "../../../redux/slices/types";
+import { twMerge } from "tailwind-merge";
 
 interface PlayersListProps {
   maxSelected?: number;
   onSelect?: (selected: number | number[]) => void;
   filter?: number[] | null | "you";
+  submitSelectedClassName?: string;
 }
 
 const PlayersList: FC<PlayersListProps> = ({
   maxSelected = 1,
   filter = null,
+  submitSelectedClassName,
 }) => {
   const dispatch = useDispatch();
-  const { players, submitSelection, selectedPlayers } = useSelector(
-    (state: RootState) => state.game.game
-  );
+  const { players, submitSelection, selectedPlayers, currentPlayer } =
+    useSelector((state: RootState) => state.game.game);
 
-  const filterPlayers = (players, filter: number[] | null | "you") => {
+  const filterPlayers = (
+    players: IPlayer[],
+    filter: number[] | null | "you"
+  ) => {
     if (Array.isArray(filter)) {
       return players.filter((player) => !filter.includes(player.id));
+    }
+    if (filter === "you") {
+      return players.filter(
+        (player) => player.id !== players[currentPlayer].id
+      );
     }
     return players;
   };
@@ -50,7 +60,10 @@ const PlayersList: FC<PlayersListProps> = ({
             onClick={() => handleSelect(player.id)}
             playerId={player.id}
             isSubmitted={submitSelection}
-            submitClassName="bg-red-300 border-red-400"
+            submitClassName={twMerge(
+              "bg-red-300 border-red-400",
+              submitSelectedClassName
+            )}
           />
         );
       })}

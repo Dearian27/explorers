@@ -5,9 +5,8 @@ import Roles from "../../components/feature/Roles";
 import BottomPanel from "../../components/layout/BottomPanel";
 import Button from "../../components/common/Button";
 import { twMerge } from "tailwind-merge";
-import { RoleParams } from "../../types";
 import rolesJSON from "../../assets/data/roles.json";
-import { IPlayer } from "../../redux/slices/types";
+import { IPlayer, RoleParams } from "../../redux/slices/types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import {
@@ -25,10 +24,12 @@ const StartGame = () => {
   const [playersCount, setPlayersCount] = useState<number>(5);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [roles, setRoles] = useState<(RoleParams & { count: number })[]>(
+    //@ts-expect-error #fix me
     rolesJSON.map((el) => ({ ...el, count: el.minCount || 0 }))
   );
   const [activeRoles, setActiveRoles] = useState<
     (RoleParams & { count: number })[]
+    //@ts-expect-error #fix me
   >(rolesJSON.map((el) => ({ ...el, count: el.minCount || 0 })));
 
   const [errorText, setErrorText] = useState("");
@@ -120,7 +121,7 @@ const StartGame = () => {
         <h2 className="text-xl font-bold">Кількість гравців</h2>
         <NumberInput
           // containerClassName="self-center"
-          min={5}
+          min={4}
           value={playersCount}
           setValue={setPlayersCount}
         />

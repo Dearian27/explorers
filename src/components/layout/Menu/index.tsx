@@ -1,11 +1,13 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { twMerge } from "tailwind-merge";
 import { useRef } from "react";
 import useClickOutside from "../../../utils/useClickOutside";
 import { useGameProps } from "../../../pages/Game/GameProvider";
+import { endGame } from "../../../redux/slices/GameSlice";
 
 const Menu = ({ buttonRef }) => {
+  const dispatch = useDispatch();
   const { openMenu, setOpenMenu } = useGameProps();
   const { isNight } = useSelector((state: RootState) => state.game.game);
   const menuRef = useRef(null!);
@@ -23,7 +25,12 @@ const Menu = ({ buttonRef }) => {
       <button onClick={() => setOpenMenu(false)}>x</button>
       <div className="text-dark cursor-pointer p-1 ">Ще щось</div>
       <div className="text-dark cursor-pointer p-1">Статистика</div>
-      <div className="text-accent cursor-pointer p-1">Завершити гру</div>
+      <div
+        className="text-accent cursor-pointer p-1"
+        onClick={() => dispatch(endGame())}
+      >
+        Завершити гру
+      </div>
     </div>
   );
 };

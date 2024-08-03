@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { IPlayer } from "./types";
-import { PlayerMessage, RoleParams } from "../../types";
+import { IPlayer, IMission, RoleParams } from "./types";
+import { PlayerMessage } from "../../types";
 
 export interface CounterState {
   isGameStarted: boolean;
@@ -9,6 +9,11 @@ export interface CounterState {
   game: {
     isNight: boolean;
     day: number;
+    voting: {
+      isVoting: boolean;
+      data: IMission[];
+      missionsCompleted: number;
+    };
     additionalSettings: {
       firstInfectDay: number;
       isInterceptorsViewClear: boolean;
@@ -43,6 +48,11 @@ const initialState: CounterState = {
   game: {
     isNight: false,
     day: 0,
+    voting: {
+      isVoting: false,
+      data: [],
+      missionsCompleted: 0,
+    },
     additionalSettings: {
       isInterceptorsViewClear: true,
       firstInfectDay: 1,
@@ -135,6 +145,13 @@ const gameSlice = createSlice({
     setNextCycle: (state) => {
       state.game.additionalSettings.currentCycle += 1;
     },
+    endGame: (state) => {
+      state.isGameStarted = false;
+      state.game = initialState.game;
+    },
+    setIsVoting: (state, action: PayloadAction<boolean>) => {
+      state.game.voting.isVoting = action.payload;
+    },
   },
 });
 
@@ -155,6 +172,8 @@ export const {
   markPlayerAsClone,
   setIsGameStarted,
   setNextCycle,
+  endGame,
+  setIsVoting,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

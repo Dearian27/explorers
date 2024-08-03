@@ -1,9 +1,9 @@
-import React from "react";
 import Button from "../../common/Button";
 import { useGameProps } from "../../../pages/Game/GameProvider";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import Timer from "../../feature/Timer";
+import { setSubmitSelectedPlayers } from "../../../redux/slices/GameSlice";
 
 const PlayerBottomIF = () => {
   const {
@@ -22,10 +22,26 @@ const PlayerBottomIF = () => {
     submitSelection,
     playersCount,
     day,
-    additionalSettings: { currentCycle },
+    additionalSettings: { currentCycle, doubleNightCycle },
   } = useSelector((state: RootState) => state.game.game);
+  const dispatch = useDispatch();
+
   return (
     <>
+      {players[currentPlayer]?.role === "detective" &&
+        (currentCycle > 0 || !doubleNightCycle) && (
+          <Button
+            disabled={!selectedPlayers.length}
+            freezeActive={true}
+            clickedClassName="!text-blue-200 !shadow-none"
+            className="btn3d bg-blue-400 shadow-blue-500"
+            onClick={() =>
+              !submitSelection && dispatch(setSubmitSelectedPlayers(true))
+            }
+          >
+            Перевірити
+          </Button>
+        )}
       {(checkIsActiveClone(players[currentPlayer]?.id) || wasActiveClone) && (
         <Button
           disabled={!selectedPlayers.length}
@@ -35,7 +51,7 @@ const PlayerBottomIF = () => {
           className="btn3d bg-accent !shadow-red-800"
           onClick={() => !submitSelection && infectPerson()}
         >
-          INFECT
+          ЗАРАЗИТИ
         </Button>
       )}
       <Button
