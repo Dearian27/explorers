@@ -60,6 +60,7 @@ interface GameContextParams {
   startVoting: () => void;
   votingAnswer: VoteAnswerVariants;
   setVotingAnswer: Dispatch<SetStateAction<VoteAnswerVariants>>;
+  checkIsIntroductionNight: () => boolean;
 }
 
 const GameContext = createContext<GameContextParams>(null!);
@@ -81,7 +82,12 @@ export const GameProvider = ({ children }) => {
     submitSelection,
     messages,
     voting: { data: missions, currentMission, votingCurrentPlayer },
-    additionalSettings: { doubleNightCycle, currentCycle, maxCycle },
+    additionalSettings: {
+      doubleNightCycle,
+      currentCycle,
+      maxCycle,
+      introductoryNight,
+    },
   } = useSelector((state: RootState) => state.game.game);
   const dispatch = useDispatch();
 
@@ -96,6 +102,8 @@ export const GameProvider = ({ children }) => {
   const [openMenu, setOpenMenu] = useState(false);
 
   const [votingAnswer, setVotingAnswer] = useState<VoteAnswerVariants>("");
+
+  const checkIsIntroductionNight = () => introductoryNight && day === 1;
 
   const checkIsActiveClone = (id: number) => {
     return activeCloneId.value === id && day >= activeCloneId.startDay;
@@ -194,7 +202,11 @@ export const GameProvider = ({ children }) => {
     if (currentPlayer < players.length - 1) {
       checkSettingClone();
       dispatch(setNextCurrentPlayer());
-    } else if (doubleNightCycle && currentCycle < maxCycle) {
+    } else if (
+      doubleNightCycle &&
+      currentCycle < maxCycle &&
+      !checkIsIntroductionNight()
+    ) {
       checkSettingClone(0); //? check first player
       dispatch(setNextCycle());
       dispatch(resetNightRoundData());
@@ -237,6 +249,7 @@ export const GameProvider = ({ children }) => {
         voteHandler,
         votingAnswer,
         setVotingAnswer,
+        checkIsIntroductionNight,
       }}
     >
       {children}

@@ -24,6 +24,7 @@ import DetectiveIF from "../../components/interfaces/DetectiveIF";
 import Missions from "../../components/feature/Missions";
 import { setIsVoting } from "../../redux/slices/GameSlice";
 import PlayerVotingIF from "../../components/interfaces/PlayerVotingIF";
+import CloneIF from "../../components/interfaces/CloneIF";
 
 const Game = () => {
   const {
@@ -46,7 +47,7 @@ const Game = () => {
     selectedPlayers,
     day,
     voting: { isVoting, data: missions, currentMission },
-    additionalSettings: { currentCycle },
+    additionalSettings: { currentCycle, introductoryNight },
   } = useSelector((state: RootState) => state.game.game);
   const dispatch = useDispatch();
 
@@ -62,29 +63,17 @@ const Game = () => {
           {/* <h2 className="flex flex-col">
             <span>Ніч: {day}</span>
           </h2> */}
+
           <PlayerNameInputIF />
 
-          {(checkIsActiveClone(players[currentPlayer]?.id) ||
-            wasActiveClone) && (
+          {((introductoryNight && day !== 1) || !introductoryNight) && (
             <>
-              <h1 className="text-xl font-semibold">Виберіть вашу жертву:</h1>
-              <PlayersList
-                filter={players[currentPlayer]?.disabledCellIds}
-                maxSelected={1}
-              />
-              <Textarea
-                value={message}
-                setValue={setMessage}
-                min={0}
-                max={35}
-                placeholder="Повідомлення (необов'язково)"
-              />
+              <CloneIF />
+              <PlayersMessagesIF />
+              <DetectiveIF />
+              <InterceptorIF />
             </>
           )}
-
-          <PlayersMessagesIF />
-          <DetectiveIF />
-          <InterceptorIF />
         </div>
       </PhaseLayout>
 
