@@ -5,7 +5,7 @@ import { RootState } from "../../../redux/store";
 import Timer from "../../feature/Timer";
 import { setSubmitSelectedPlayers } from "../../../redux/slices/GameSlice";
 
-const PlayerBottomIF = () => {
+const PlayerNightBottomIF = () => {
   const {
     checkIsActiveClone,
     wasActiveClone,
@@ -74,4 +74,4 @@ const PlayerBottomIF = () => {
   );
 };
 
-export default PlayerBottomIF;
+export default PlayerNightBottomIF;

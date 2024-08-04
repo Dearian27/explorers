@@ -11,7 +11,7 @@ function App() {
     (state: RootState) => state.game.isGameStarted
   );
   return (
-    <div className="relative flex flex-col items-stretch mx-auto max-w-[780px] min-h-[100dvh] bg-main overflow-x-hidden">
+    <div className="relative flex flex-col items-stretch mx-auto max-w-[780px] min-h-[100dvh] bg-white overflow-x-hidden">
       <DebugPanel />
       {isGameStarted ? (
         <GameProvider>

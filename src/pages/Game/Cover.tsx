@@ -24,7 +24,7 @@ const Cover = ({ name = "" }) => {
           Гравець {currentPlayer + 1}
         </span>
         {name && (
-          <span className="text-slate-400 font-extrabold text-xl">{name}</span>
+          <span className="text-main font-extrabold text-xl">{name}</span>
         )}
         <button className="text-white animated mt-6">УТРИМАТИ</button>
       </div>
