@@ -13,6 +13,7 @@ const DebugPanel = () => {
       selectedPlayers,
       submitSelection,
       additionalSettings: { currentCycle, maxCycle },
+      voting: { isVoting, data: missions, currentMission },
     },
   } = useSelector((state: RootState) => state.game);
 
@@ -57,6 +58,9 @@ const DebugPanel = () => {
                   activeCloneId.value === p.id && "h-3 w-3  bg-orange-500"
                 )}
               />
+            )}
+            {missions[currentMission]?.players?.includes(p.id) && isVoting && (
+              <div className="text-lg font-bold text-green-500">V</div>
             )}
           </div>
         ))}

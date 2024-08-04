@@ -13,6 +13,8 @@ export interface CounterState {
       isVoting: boolean;
       data: IMission[];
       missionsCompleted: number;
+      votingCurrentPlayer: number;
+      currentMission: number;
     };
     additionalSettings: {
       firstInfectDay: number;
@@ -21,6 +23,7 @@ export interface CounterState {
       maxCycle: number;
       doubleNightCycle: boolean;
       interceptorsVisionDelay: number;
+      introductoryNight: boolean;
     };
     messages: PlayerMessage[];
     playersCount: number;
@@ -50,8 +53,29 @@ const initialState: CounterState = {
     day: 0,
     voting: {
       isVoting: false,
-      data: [],
+      data: [
+        {
+          id: 0,
+          playersCapacity: 2,
+          players: [],
+          type: "default",
+          minClonesToLose: 1,
+          votings: [],
+          status: "",
+        },
+        {
+          id: 1,
+          playersCapacity: 3,
+          players: [],
+          type: "default",
+          minClonesToLose: 2,
+          votings: [],
+          status: "",
+        },
+      ],
       missionsCompleted: 0,
+      votingCurrentPlayer: 0,
+      currentMission: 0,
     },
     additionalSettings: {
       isInterceptorsViewClear: true,
@@ -60,6 +84,7 @@ const initialState: CounterState = {
       maxCycle: 1,
       doubleNightCycle: true,
       interceptorsVisionDelay: 0, //? interceptor starts catch messages with delay of X days
+      introductoryNight: true,
     },
     messages: [],
     infectNights: [1, 3, 4, 6],
@@ -96,6 +121,20 @@ const gameSlice = createSlice({
     },
     setNextCurrentPlayer: (state) => {
       state.game.currentPlayer += 1;
+    },
+    setCurrentPlayer: (state, action: PayloadAction<number>) => {
+      state.game.currentPlayer = action.payload;
+    },
+    setVotingCurrentPlayer: (state, action: PayloadAction<number>) => {
+      state.game.voting.votingCurrentPlayer = action.payload;
+    },
+    setNextVotingCurrentPlayer: (state) => {
+      state.game.voting.votingCurrentPlayer += 1;
+      state.game.currentPlayer =
+        state.game.voting.data[state.game.voting.currentMission].players[
+          state.game.voting.votingCurrentPlayer
+        ];
+      //? getting current player from voting players array
     },
     resetNightRoundData: (state) => {
       state.game.currentPlayer = 0;
@@ -152,6 +191,41 @@ const gameSlice = createSlice({
     setIsVoting: (state, action: PayloadAction<boolean>) => {
       state.game.voting.isVoting = action.payload;
     },
+    setNextCurrentMission: (state) => {
+      state.game.voting.currentMission += 1;
+    },
+    setMissionData: (
+      state,
+      action: PayloadAction<{ currentMission?: number; mission: IMission }>
+    ) => {
+      const currentMission =
+        action.payload.currentMission !== undefined
+          ? action.payload.currentMission
+          : state.game.voting.currentMission;
+      state.game.voting.data[currentMission] = action.payload.mission;
+    },
+    addMissionVote: (
+      state,
+      action: PayloadAction<{
+        playerId: number;
+        isSuccess: boolean;
+        reason?: "string";
+      }>
+    ) => {
+      state.game.voting.data[state.game.voting.currentMission].votings.push(
+        action.payload
+      );
+    },
+    setMissionStatus: (state) => {
+      const mission = state.game.voting.data[state.game.voting.currentMission];
+      const isSucceeded =
+        mission.votings.reduce((acc, next) => {
+          if (!next.isSuccess) return (acc += 1);
+          return acc;
+        }, 0) < mission.minClonesToLose;
+      state.game.voting.data[state.game.voting.currentMission].status =
+        isSucceeded ? "success" : "failure";
+    },
   },
 });
 
@@ -161,6 +235,11 @@ export const {
   setIsNight,
   initPlayers,
   setNextCurrentPlayer,
+  setCurrentPlayer,
+  setVotingCurrentPlayer,
+  setNextVotingCurrentPlayer,
+  setNextCurrentMission,
+  setMissionData,
   resetNightRoundData,
   setActiveCloneId,
   setSelectedPlayers,
@@ -174,6 +253,8 @@ export const {
   setNextCycle,
   endGame,
   setIsVoting,
+  addMissionVote,
+  setMissionStatus,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

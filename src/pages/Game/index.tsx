@@ -15,7 +15,7 @@ import Timer from "../../components/feature/Timer";
 import InterceptorIF from "../../components/interfaces/InterceptorIF";
 import PlayersMessagesIF from "../../components/interfaces/PlayersMessagesIF";
 import PlayerRoleTitle from "../../components/interfaces/PlayerRoleTitle";
-import PlayerBottomIF from "../../components/interfaces/PlayerBottomIF";
+import PlayerNightBottomIF from "../../components/interfaces/PlayerBottomIF";
 import PlayerNameInputIF from "../../components/interfaces/PlayerNameInputIF";
 import Menu from "../../components/layout/Menu";
 import { useRef } from "react";
@@ -23,36 +23,29 @@ import SpeechTimer from "../../components/feature/SpeechTimer";
 import DetectiveIF from "../../components/interfaces/DetectiveIF";
 import Missions from "../../components/feature/Missions";
 import { setIsVoting } from "../../redux/slices/GameSlice";
+import PlayerVotingIF from "../../components/interfaces/PlayerVotingIF";
 
 const Game = () => {
   const {
-    playerInterfaceShow,
-    setPlayerInterfaceShow,
-    name,
-    setName,
     blueTeamPoints,
     setBlueTeamPoints,
-    infectPerson,
-    setNextPlayer,
     checkIsActiveClone,
     toggleNightHandler,
     setMessage,
     message,
     wasActiveClone,
-    timerEnd,
-    setTimerEnd,
     setOpenMenu,
-    openMenu,
+    votingAnswer,
+    startVoting,
+    voteHandler,
   } = useGameProps();
 
   const {
     currentPlayer,
     players,
-    playersCount,
     selectedPlayers,
     day,
-    submitSelection,
-    // voting: { isVoting },
+    voting: { isVoting, data: missions, currentMission },
     additionalSettings: { currentCycle },
   } = useSelector((state: RootState) => state.game.game);
   const dispatch = useDispatch();
@@ -96,76 +89,99 @@ const Game = () => {
       </PhaseLayout>
 
       <PhaseLayout dayPhase="day">
-        {/* {isVoting ? (
-          <div>voting</div>
-        ) : ( */}
-        <div>
-          <header className="w-full bg-gray-100 p-4 flex justify-between">
-            <h1 className="text-md font-bold">День: {day}</h1>
-            <button
-              ref={buttonRef}
-              onClick={() => setOpenMenu((prev) => !prev)}
-            >
-              Меню
-            </button>
-          </header>
-          <div className="flex-1 flex flex-col">
-            <div className="flex bg-blue-200 self-start">
-              <input
-                readOnly
-                value={blueTeamPoints}
-                type="number"
-                className="h-16 w-16 bg-transparent text-center text-[1.4rem] font-bold text-blue-400"
-              />
-              <div className="flex flex-col bg-blue-300">
-                <button
-                  className="h-8 w-8 font-bold"
-                  onClick={() => setBlueTeamPoints((prev) => prev + 1)}
-                >
-                  +
-                </button>
-                <button
-                  className="h-8 w-8 font-bold"
-                  onClick={() =>
-                    setBlueTeamPoints((prev) => (prev ? prev - 1 : prev))
-                  }
-                >
-                  -
-                </button>
-              </div>
-            </div>
-            <SpeechTimer />
-
-            <div className="flex flex-col gap-2 self-center items-center my-4 p-2 border border-dark rounded-md">
-              <h1 className="text-xl font-bold">Голосування</h1>
-              <PlayersList maxSelected={players?.length} />
-              {/* //* додати день під результатом голосування */}
-              <Button
-                // disabled={} //* disable якщо не було місії у цьому ходу або модалку висвітити при спробі
-                onClick={() => dispatch(setIsVoting(true))}
-                className="bg-cyan-400 shadow-cyan-500"
+        {isVoting ? (
+          <div className="w-full h-full p-4 pb-16 gap-4 flex flex-1 flex-col">
+            <Cover name={players[currentPlayer]?.name} />
+            <PlayerVotingIF />
+          </div>
+        ) : (
+          <div>
+            <header className="w-full bg-gray-100 p-4 flex justify-between">
+              <h1 className="text-md font-bold">День: {day}</h1>
+              <button
+                ref={buttonRef}
+                onClick={() => setOpenMenu((prev) => !prev)}
               >
-                Розпочати
-              </Button>
+                Меню
+              </button>
+            </header>
+            <div className="flex-1 flex flex-col">
+              <div className="flex bg-blue-200 self-start">
+                <input
+                  readOnly
+                  value={blueTeamPoints}
+                  type="number"
+                  className="h-16 w-16 bg-transparent text-center text-[1.4rem] font-bold text-blue-400"
+                />
+                <div className="flex flex-col bg-blue-300">
+                  <button
+                    className="h-8 w-8 font-bold"
+                    onClick={() => setBlueTeamPoints((prev) => prev + 1)}
+                  >
+                    +
+                  </button>
+                  <button
+                    className="h-8 w-8 font-bold"
+                    onClick={() =>
+                      setBlueTeamPoints((prev) => (prev ? prev - 1 : prev))
+                    }
+                  >
+                    -
+                  </button>
+                </div>
+              </div>
+              <SpeechTimer />
+
+              <div className="flex flex-col gap-4 self-center items-center my-4 p-4 pt-2 border border-dark rounded-md bg-main">
+                <h1 className="text-xl font-bold">Голосування</h1>
+                {currentMission < missions?.length && (
+                  <h2 className="-mt-4 text-md font-bold text-light">
+                    2 гравці
+                  </h2>
+                )}
+                <PlayersList maxSelected={players?.length} />
+                {/* //* додати день під результатом голосування */}
+                {currentMission < missions?.length && (
+                  <Button
+                    disabled={
+                      selectedPlayers.length !==
+                      missions[currentMission]?.playersCapacity
+                    }
+                    // disabled={} //* disable якщо не було місії у цьому ходу або модалку висвітити при спробі
+                    onClick={() => startVoting()}
+                    className="bg-light shadow-[#a19182]"
+                  >
+                    Розпочати
+                  </Button>
+                )}
+              </div>
+              <Missions />
             </div>
           </div>
-
-          <Missions />
-        </div>
-        {/* )} */}
+        )}
       </PhaseLayout>
 
       <BottomPanel className="justify-end">
         <PhaseLayout dayPhase="night">
-          <PlayerBottomIF />
+          <PlayerNightBottomIF />
         </PhaseLayout>
         <PhaseLayout dayPhase="day">
-          <button
-            onClick={() => toggleNightHandler()}
-            className="btn3d bg-cyan-400 shadow-cyan-500"
-          >
-            Розпочати ніч
-          </button>
+          {isVoting ? (
+            <Button
+              disabled={!votingAnswer}
+              onClick={() => voteHandler()}
+              className="btn3d bg-cyan-400 shadow-cyan-500"
+            >
+              Підтвердити
+            </Button>
+          ) : (
+            <button
+              onClick={() => toggleNightHandler()}
+              className="btn3d bg-cyan-400 shadow-cyan-500"
+            >
+              Розпочати ніч
+            </button>
+          )}
         </PhaseLayout>
       </BottomPanel>
     </>

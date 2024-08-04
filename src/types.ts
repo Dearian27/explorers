@@ -7,3 +7,5 @@ export interface PlayerMessage {
   type: "clone";
   text: string;
 }
+
+export type VoteAnswerVariants = "" | "yes" | "no";

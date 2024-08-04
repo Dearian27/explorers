@@ -10,17 +10,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import {
   addMessage,
+  addMissionVote,
+  clearSelectedPlayers,
   markPlayerAsClone,
   resetNightRoundData,
+  setMissionData,
+  setCurrentPlayer,
   setIsNight,
+  setIsVoting,
+  setNextCurrentMission,
   setNextCurrentPlayer,
   setNextCycle,
   setNextDay,
+  setNextVotingCurrentPlayer,
   setPersonInfected,
   setPlayerName,
   setSelectedPlayers,
   setSubmitSelectedPlayers,
+  setVotingCurrentPlayer,
+  setMissionStatus,
 } from "../../redux/slices/GameSlice";
+import { VoteAnswerVariants } from "../../types";
 
 interface GameContextParams {
   message: string;
@@ -45,6 +55,11 @@ interface GameContextParams {
   setTimerEnd: Dispatch<SetStateAction<boolean>>;
   openMenu: boolean;
   setOpenMenu: Dispatch<SetStateAction<boolean>>;
+  endVoting: () => void;
+  voteHandler: () => void;
+  startVoting: () => void;
+  votingAnswer: VoteAnswerVariants;
+  setVotingAnswer: Dispatch<SetStateAction<VoteAnswerVariants>>;
 }
 
 const GameContext = createContext<GameContextParams>(null!);
@@ -65,6 +80,7 @@ export const GameProvider = ({ children }) => {
     activeCloneId,
     submitSelection,
     messages,
+    voting: { data: missions, currentMission, votingCurrentPlayer },
     additionalSettings: { doubleNightCycle, currentCycle, maxCycle },
   } = useSelector((state: RootState) => state.game.game);
   const dispatch = useDispatch();
@@ -78,6 +94,8 @@ export const GameProvider = ({ children }) => {
   const [name, setName] = useState("");
   const [timerEnd, setTimerEnd] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
+
+  const [votingAnswer, setVotingAnswer] = useState<VoteAnswerVariants>("");
 
   const checkIsActiveClone = (id: number) => {
     return activeCloneId.value === id && day >= activeCloneId.startDay;
@@ -98,6 +116,40 @@ export const GameProvider = ({ children }) => {
       })
     ); //!FIX ME (id)
     setMessage("");
+  };
+
+  const startVoting = () => {
+    dispatch(setIsVoting(true));
+    dispatch(setCurrentPlayer(selectedPlayers[0])); //? before mission.players was configured
+    dispatch(
+      setMissionData({
+        mission: { ...missions[currentMission], players: selectedPlayers },
+      })
+    );
+    dispatch(clearSelectedPlayers());
+  };
+
+  const voteHandler = () => {
+    dispatch(
+      addMissionVote({
+        playerId: players[currentPlayer].id,
+        isSuccess: votingAnswer === "yes" ? true : false,
+      })
+    );
+    setVotingAnswer("");
+    if (votingCurrentPlayer === missions[currentMission].players.length - 1) {
+      endVoting();
+    } else {
+      dispatch(setNextVotingCurrentPlayer());
+    }
+  };
+
+  const endVoting = () => {
+    dispatch(setMissionStatus());
+    dispatch(setNextCurrentMission());
+    dispatch(setVotingCurrentPlayer(0));
+    dispatch(setCurrentPlayer(0));
+    dispatch(setIsVoting(false));
   };
 
   const checkSettingClone = (currentIndex = null) => {
@@ -180,6 +232,11 @@ export const GameProvider = ({ children }) => {
         setTimerEnd,
         openMenu,
         setOpenMenu,
+        endVoting,
+        startVoting,
+        voteHandler,
+        votingAnswer,
+        setVotingAnswer,
       }}
     >
       {children}

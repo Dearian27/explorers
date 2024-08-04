@@ -21,13 +21,23 @@ export interface IPlayer {
   name: string;
   role: RoleVariants;
   isClone: boolean;
-  cloneStartDay?: number; //?  mean start day of setting isClone to true
+  cloneStartDay?: number; //?  mean start day of setting isClone to true (delay??)
   disabledCellIds: number[];
 }
 
 export interface IMission {
   id: number;
+  playersCapacity: number;
   players: number[];
+  type: "default" | "clone";
+  minClonesToLose: number;
   votings: { playerId: number; isSuccess: boolean; reason?: string }[];
-  isSucceed: boolean;
+  status: "success" | "failure" | "";
 }
+
+export type MissionStatusVatiants = "success" | "failure" | "";
+export type MissionVoteParams = {
+  playerId: number;
+  isSuccess: boolean;
+  reason?: string;
+};

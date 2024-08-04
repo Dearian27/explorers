@@ -1,30 +1,33 @@
+import { useSelector } from "react-redux";
 import { twMerge } from "tailwind-merge";
+import { RootState } from "../../../redux/store";
+import { TriangleIcon } from "../../../assets/icons";
 
 const Missions = () => {
-  const missionsData = [
-    { id: 1, players: [1, 2, 3], isSucceed: true },
-    { id: 2, players: [1, 4, 0], isSucceed: true },
-    { id: 3, players: [2, 3, 4], isSucceed: false },
-    { id: 4, players: [], isSucceed: null },
-    { id: 5, players: [], isSucceed: null },
-  ];
+  const {
+    voting: { data: missions, currentMission },
+  } = useSelector((state: RootState) => state.game.game);
 
   return (
-    <div className="flex gap-2 p-4 justify-center">
-      {missionsData.map((mission) => (
+    <div className="flex gap-2 my-4 justify-center relative">
+      {missions.map((mission) => (
         <div
           key={mission.id}
           className={twMerge(
-            "h-14 w-14 rounded-full  border-4 flex items-center border-light justify-center font-bold text-white text-xl",
-            mission.players.length &&
-              mission.isSucceed &&
-              "bg-blue-400 border-white",
-            mission.players.length &&
-              !mission.isSucceed &&
-              "bg-red-400 border-white"
+            "h-14 w-14 rounded-full border-4 flex items-center border-light justify-center text-light font-bold text-xl opacity-70 transition relative",
+            mission.status === "success" &&
+              "bg-blue-400 border-blue-400 text-white opacity-100",
+            mission.status === "failure" &&
+              "bg-red-400 border-red-400 text-white opacity-100"
           )}
         >
-          {mission.players.length ? mission.id : ""}
+          {mission?.id === currentMission && (
+            <TriangleIcon className="h-4 absolute left-auto right-auto bottom-[110%]" />
+          )}
+          <span className="absolute bottom-1.5 right-2.5 text-xs text-main">
+            {mission?.minClonesToLose > 1 && mission?.minClonesToLose}
+          </span>
+          {mission?.playersCapacity || ""}
         </div>
       ))}
     </div>
