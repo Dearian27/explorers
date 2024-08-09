@@ -29,6 +29,7 @@ import {
   setSubmitSelectedPlayers,
   setVotingCurrentPlayer,
   setMissionStatus,
+  setIsVotingResult,
 } from "../../redux/slices/GameSlice";
 import { VoteAnswerVariants } from "../../types";
 
@@ -61,6 +62,7 @@ interface GameContextParams {
   votingAnswer: VoteAnswerVariants;
   setVotingAnswer: Dispatch<SetStateAction<VoteAnswerVariants>>;
   checkIsIntroductionNight: () => boolean;
+  nextMission: () => void;
 }
 
 const GameContext = createContext<GameContextParams>(null!);
@@ -154,10 +156,15 @@ export const GameProvider = ({ children }) => {
 
   const endVoting = () => {
     dispatch(setMissionStatus());
-    dispatch(setNextCurrentMission());
     dispatch(setVotingCurrentPlayer(0));
     dispatch(setCurrentPlayer(0));
     dispatch(setIsVoting(false));
+    dispatch(setIsVotingResult(true));
+  };
+
+  const nextMission = () => {
+    dispatch(setIsVotingResult(false));
+    dispatch(setNextCurrentMission());
   };
 
   const checkSettingClone = (currentIndex = null) => {
@@ -250,6 +257,7 @@ export const GameProvider = ({ children }) => {
         votingAnswer,
         setVotingAnswer,
         checkIsIntroductionNight,
+        nextMission,
       }}
     >
       {children}

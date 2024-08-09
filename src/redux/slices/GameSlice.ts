@@ -11,6 +11,7 @@ export interface CounterState {
     day: number;
     voting: {
       isVoting: boolean;
+      isVotingResult: boolean;
       data: IMission[];
       missionsCompleted: number;
       votingCurrentPlayer: number;
@@ -53,6 +54,7 @@ const initialState: CounterState = {
     day: 0,
     voting: {
       isVoting: false,
+      isVotingResult: false,
       data: [
         {
           id: 0,
@@ -226,6 +228,9 @@ const gameSlice = createSlice({
       state.game.voting.data[state.game.voting.currentMission].status =
         isSucceeded ? "success" : "failure";
     },
+    setIsVotingResult: (state, action: PayloadAction<boolean>) => {
+      state.game.voting.isVotingResult = action.payload;
+    },
   },
 });
 
@@ -255,6 +260,7 @@ export const {
   setIsVoting,
   addMissionVote,
   setMissionStatus,
+  setIsVotingResult,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

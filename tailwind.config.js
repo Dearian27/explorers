@@ -11,7 +11,7 @@ export default {
       },
       colors: {
         dark: "#302419",
-        light: "#D3C2B2",
+        light: "#F7F7F9",
         accent: "#CC141C",
         main: "#F9F5F1",
         // theme: {
