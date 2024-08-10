@@ -37,9 +37,13 @@ const DayIF = ({ menuBtnRef }) => {
       ) : isVotingResult ? (
         <div className="w-full h-full p-4 pb-16 gap-4 flex flex-1 flex-col justify-center items-center">
           <div className="flex flex-wrap gap-2">
-            <VoteCard status="success" />
-            <VoteCard status="success" />
-            <VoteCard status="success" />
+            {missions[currentMission].votings.map((vote) => {
+              console.log(vote);
+              return <VoteCard status="success" />;
+            })}
+          </div>
+          <div className="font-bold">
+            <span className="text-[#59afff]">2</span>/3
           </div>
           <Button onClick={() => nextMission()}>Ok</Button>
         </div>
@@ -101,7 +105,7 @@ const DayIF = ({ menuBtnRef }) => {
                   }
                   // disabled={} //* disable якщо не було місії у цьому ходу або модалку висвітити при спробі
                   onClick={() => startVoting()}
-                  className="bg-light shadow-[#a19182]"
+                  className="bg-dark shadow-[#a19182]"
                 >
                   Розпочати
                 </Button>

@@ -7,13 +7,13 @@ import { setSubmitSelectedPlayers } from "../../../redux/slices/GameSlice";
 
 const PlayerNightBottomIF = () => {
   const {
-    checkIsActiveClone,
-    wasActiveClone,
+    // checkIsActiveClone,
+    // wasActiveClone,
     setNextPlayer,
     name,
     timerEnd,
     setTimerEnd,
-    infectPerson,
+    // infectPerson,
     checkIsIntroductionNight,
   } = useGameProps();
   const {
@@ -45,19 +45,10 @@ const PlayerNightBottomIF = () => {
                 Перевірити
               </Button>
             )}
-          {(checkIsActiveClone(players[currentPlayer]?.id) ||
+          {/* {(checkIsActiveClone(players[currentPlayer]?.id) ||
             wasActiveClone) && (
-            <Button
-              disabled={!selectedPlayers.length}
-              freezeActive={true}
-              styleType="blood"
-              clickedClassName="!text-red-300"
-              className="btn3d bg-accent !shadow-red-800"
-              onClick={() => !submitSelection && infectPerson()}
-            >
-              ЗАРАЗИТИ
-            </Button>
-          )}
+          
+          )} */}
         </>
       )}
       <Button

@@ -11,12 +11,14 @@ interface PlayersListProps {
   onSelect?: (selected: number | number[]) => void;
   filter?: number[] | null | "you";
   submitSelectedClassName?: string;
+  title?: string;
 }
 
 const PlayersList: FC<PlayersListProps> = ({
   maxSelected = 1,
   filter = null,
   submitSelectedClassName,
+  title,
 }) => {
   const dispatch = useDispatch();
   const { players, submitSelection, selectedPlayers, currentPlayer } =
@@ -51,22 +53,26 @@ const PlayersList: FC<PlayersListProps> = ({
   };
 
   return (
-    <div className="flex flex-wrap gap-1">
-      {filterPlayers(players, filter).map((player: IPlayer) => {
-        return (
-          <ListItem
-            key={player.id}
-            isSelected={selectedPlayers.includes(player.id)}
-            onClick={() => handleSelect(player.id)}
-            playerId={player.id}
-            isSubmitted={submitSelection}
-            submitClassName={twMerge(
-              "bg-red-300 border-red-400",
-              submitSelectedClassName
-            )}
-          />
-        );
-      })}
+    <div className="flex flex-col gap-2 bg-secondary rounded-2xl py-5 px-4">
+      {title && <h2 className="text-[#252525] font-bold text-lg">{title}</h2>}
+
+      <div className="flex  flex-wrap gap-1.5">
+        {filterPlayers(players, filter).map((player: IPlayer) => {
+          return (
+            <ListItem
+              key={player.id}
+              isSelected={selectedPlayers.includes(player.id)}
+              onClick={() => handleSelect(player.id)}
+              playerId={player.id}
+              isSubmitted={submitSelection}
+              submitClassName={twMerge(
+                "bg-red-300 border-red-400",
+                submitSelectedClassName
+              )}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };

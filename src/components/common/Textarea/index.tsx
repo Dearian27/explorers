@@ -20,16 +20,16 @@ const Textarea: FC<TextareaProps> = ({
   ...props
 }) => {
   return (
-    <div className="w-full relative inline-flex self-start rounded-md border btn3d bg-slate-200 text-black p-1 focus:translate-y-1 shadow-none">
+    <div className="w-full relative inline-flex self-start text-blackfocus:translate-y-1 shadow-none">
       <textarea
-        className="p-3 w-full outline-none bg-transparent resize-none text-md bg-white rounded-md pb-6"
+        className="p-3 w-full min-h-28 outline-none bg-transparent resize-none text-base py-5 px-4 bg-secondary rounded-xl pb-6 placeholder:text-[#72727C]"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         minLength={min}
         maxLength={max}
         {...props}
       />
-      <div className="absolute bottom-2 right-2">
+      <div className="absolute bottom-5 right-4 font-bold text-[#252525]">
         {value.length}/{max}
       </div>
     </div>

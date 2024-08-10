@@ -14,6 +14,7 @@ export default {
         light: "#F7F7F9",
         accent: "#CC141C",
         main: "#F9F5F1",
+        secondary: "#F7F7F9",
         // theme: {
         // },
       },

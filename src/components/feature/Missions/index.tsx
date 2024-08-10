@@ -14,7 +14,7 @@ const Missions = () => {
         <div
           key={mission.id}
           className={twMerge(
-            "h-14 w-14 rounded-full border-4 flex items-center border-light justify-center text-light font-bold text-xl opacity-70 transition relative",
+            "h-14 w-14 rounded-full border-4 flex items-center border-black justify-center text-black font-bold text-xl opacity-70 transition relative",
             mission.status === "success" &&
               "bg-blue-400 border-blue-400 text-white opacity-100",
             mission.status === "failure" &&
@@ -22,9 +22,9 @@ const Missions = () => {
           )}
         >
           {mission?.id === currentMission && (
-            <TriangleIcon className="h-4 absolute left-auto right-auto bottom-[110%]" />
+            <TriangleIcon className="fill-black h-4 absolute left-auto right-auto bottom-[110%]" />
           )}
-          <span className="absolute bottom-1.5 right-2.5 text-xs text-main">
+          <span className="absolute bottom-1.5 right-2.5 text-xs text-black">
             {mission?.minClonesToLose > 1 && mission?.minClonesToLose}
           </span>
           {mission?.playersCapacity || ""}
