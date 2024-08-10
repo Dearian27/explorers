@@ -9,6 +9,7 @@ import Button from "../../common/Button";
 import PlayersList from "../../feature/PlayersList";
 import Missions from "../../feature/Missions";
 import VoteCard from "../../feature/VoteCard";
+import { shuffleArray } from "../../../utils/shuffleArray";
 
 const DayIF = ({ menuBtnRef }) => {
   const {
@@ -36,14 +37,20 @@ const DayIF = ({ menuBtnRef }) => {
         </div>
       ) : isVotingResult ? (
         <div className="w-full h-full p-4 pb-16 gap-4 flex flex-1 flex-col justify-center items-center">
+          <h1>{missions[currentMission].status}</h1>
           <div className="flex flex-wrap gap-2">
-            {missions[currentMission].votings.map((vote) => {
-              console.log(vote);
-              return <VoteCard status="success" />;
+            {shuffleArray(missions[currentMission].votings).map((vote) => {
+              return (
+                <VoteCard
+                  key={vote.playerId}
+                  status={vote.isSuccess ? "success" : "fail"}
+                />
+              );
             })}
           </div>
           <div className="font-bold">
-            <span className="text-[#59afff]">2</span>/3
+            <span className="text-[#59afff]">2</span>/
+            {missions[currentMission].players}
           </div>
           <Button onClick={() => nextMission()}>Ok</Button>
         </div>

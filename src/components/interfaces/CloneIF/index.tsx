@@ -40,7 +40,7 @@ const CloneIF = () => {
           <button
             disabled={!selectedPlayers.length}
             onClick={() => !submitSelection && infectPerson()}
-            className="self-end py-2.5 px-6 rounded-xl bg-secondary text-[#FF3C45] font-bold transition ease-in-out active:translate-y-1"
+            className="self-end py-2.5 px-6 rounded-xl bg-secondary text-[#FF3C45] disabled:text-[#72727C] font-bold transition ease-in-out active:translate-y-1"
           >
             Заразити
           </button>
