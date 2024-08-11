@@ -9,7 +9,6 @@ import Button from "../../common/Button";
 import PlayersList from "../../feature/PlayersList";
 import Missions from "../../feature/Missions";
 import VoteCard from "../../feature/VoteCard";
-import { shuffleArray } from "../../../utils/shuffleArray";
 
 const DayIF = ({ menuBtnRef }) => {
   const {
@@ -19,6 +18,7 @@ const DayIF = ({ menuBtnRef }) => {
     setBlueTeamPoints,
     startVoting,
     nextMission,
+    showVoteCard,
   } = useGameProps();
   const {
     players,
@@ -28,6 +28,10 @@ const DayIF = ({ menuBtnRef }) => {
     voting: { isVoting, data: missions, currentMission, isVotingResult },
   } = useSelector((state: RootState) => state.game.game);
 
+  const showedCards = missions[currentMission]?.votings.reduce(
+    (acc, next) => (next.isShown ? acc + 1 : acc),
+    0
+  );
   return (
     <>
       {isVoting ? (
@@ -37,11 +41,21 @@ const DayIF = ({ menuBtnRef }) => {
         </div>
       ) : isVotingResult ? (
         <div className="w-full h-full p-4 pb-16 gap-4 flex flex-1 flex-col justify-center items-center">
-          <h1>{missions[currentMission].status}</h1>
+          <h1
+            className={twMerge(
+              "opacity-0 transition duration-300",
+              showedCards === missions[currentMission].votings.length &&
+                "opacity-100"
+            )}
+          >
+            {missions[currentMission].status}
+          </h1>
           <div className="flex flex-wrap gap-2">
-            {shuffleArray(missions[currentMission].votings).map((vote) => {
+            {missions[currentMission].votings.map((vote) => {
               return (
                 <VoteCard
+                  onClick={() => showVoteCard(vote.playerId)}
+                  isFlipped={vote.isShown}
                   key={vote.playerId}
                   status={vote.isSuccess ? "success" : "fail"}
                 />
@@ -49,10 +63,12 @@ const DayIF = ({ menuBtnRef }) => {
             })}
           </div>
           <div className="font-bold">
-            <span className="text-[#59afff]">2</span>/
-            {missions[currentMission].players}
+            <span className="text-[#59afff]">{showedCards}</span>/
+            {missions[currentMission].players.length}
           </div>
-          <Button onClick={() => nextMission()}>Ok</Button>
+          {showedCards === missions[currentMission].votings.length && (
+            <Button onClick={() => nextMission()}>Ok</Button>
+          )}
         </div>
       ) : (
         <div

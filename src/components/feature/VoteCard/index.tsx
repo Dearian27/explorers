@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import successIcon from "../../../assets/success.svg";
 import failIcon from "../../../assets/fail.svg";
 import questionMarkIcon from "../../../assets/question-mark.svg";
@@ -6,21 +6,18 @@ import { twMerge } from "tailwind-merge";
 
 type VoteCardParams = {
   status: "success" | "fail";
+  isFlipped: boolean;
+  onClick: () => void;
 };
 
-const VoteCard: FC<VoteCardParams> = ({ status }) => {
-  const [flipped, setFlipped] = useState(false);
-  const handleFlip = () => {
-    setFlipped(true);
-  };
-
+const VoteCard: FC<VoteCardParams> = ({ status, isFlipped, onClick }) => {
   const icon =
     status === "success" ? successIcon : status === "fail" && failIcon;
 
   return (
     <div
+      onClick={() => onClick()}
       className="relative h-[80px] w-[60px] cursor-pointer select-none"
-      onClick={handleFlip}
       style={{ perspective: "1000px" }}
     >
       <div
@@ -35,7 +32,7 @@ const VoteCard: FC<VoteCardParams> = ({ status }) => {
             "absolute inset-0 flex items-center justify-center rounded-md bg-light transition-all duration-700"
           )}
           style={{
-            transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+            transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
             backfaceVisibility: "hidden",
           }}
         >
@@ -48,7 +45,7 @@ const VoteCard: FC<VoteCardParams> = ({ status }) => {
             "absolute inset-0 flex items-center justify-center rounded-md bg-light transition-all duration-700"
           )}
           style={{
-            transform: flipped
+            transform: isFlipped
               ? "rotateY(0deg) translateY(-5%)"
               : "rotateY(180deg)",
             backfaceVisibility: "hidden",

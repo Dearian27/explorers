@@ -63,6 +63,7 @@ interface GameContextParams {
   setVotingAnswer: Dispatch<SetStateAction<VoteAnswerVariants>>;
   checkIsIntroductionNight: () => boolean;
   nextMission: () => void;
+  showVoteCard: (playerId: number) => void;
 }
 
 const GameContext = createContext<GameContextParams>(null!);
@@ -166,6 +167,20 @@ export const GameProvider = ({ children }) => {
     dispatch(setIsVotingResult(false));
     dispatch(setNextCurrentMission());
   };
+  const showVoteCard = (playerId: number) => {
+    //?in current mission
+    dispatch(
+      setMissionData({
+        mission: {
+          ...missions[currentMission],
+          votings: missions[currentMission].votings.map((vote) => {
+            if (vote.playerId === playerId) return { ...vote, isShown: true };
+            return vote;
+          }),
+        },
+      })
+    );
+  };
 
   const checkSettingClone = (currentIndex = null) => {
     if (
@@ -182,7 +197,6 @@ export const GameProvider = ({ children }) => {
       );
     }
   };
-
   const toggleNightHandler = () => {
     dispatch(setIsNight(!isNight));
     checkSettingClone();
@@ -258,6 +272,7 @@ export const GameProvider = ({ children }) => {
         setVotingAnswer,
         checkIsIntroductionNight,
         nextMission,
+        showVoteCard,
       }}
     >
       {children}

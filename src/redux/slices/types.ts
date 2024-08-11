@@ -31,7 +31,12 @@ export interface IMission {
   players: number[];
   type: "default" | "clone";
   minClonesToLose: number;
-  votings: { playerId: number; isSuccess: boolean; reason?: string }[];
+  votings: {
+    playerId: number;
+    isSuccess: boolean;
+    isShown: boolean;
+    reason?: string;
+  }[];
   status: "success" | "failure" | "";
 }
 

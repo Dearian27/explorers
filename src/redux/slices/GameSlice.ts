@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { IPlayer, IMission, RoleParams } from "./types";
 import { PlayerMessage } from "../../types";
+import { shuffleArray } from "../../utils/shuffleArray";
 
 export interface CounterState {
   isGameStarted: boolean;
@@ -241,9 +242,10 @@ const gameSlice = createSlice({
         reason?: "string";
       }>
     ) => {
-      state.game.voting.data[state.game.voting.currentMission].votings.push(
-        action.payload
-      );
+      state.game.voting.data[state.game.voting.currentMission].votings.push({
+        ...action.payload,
+        isShown: false,
+      });
     },
     setMissionStatus: (state) => {
       const mission = state.game.voting.data[state.game.voting.currentMission];
@@ -256,6 +258,16 @@ const gameSlice = createSlice({
         isSucceeded ? "success" : "failure";
     },
     setIsVotingResult: (state, action: PayloadAction<boolean>) => {
+      //? shuffle votings
+      if (
+        action.payload === true &&
+        state.game.voting.data[state.game.voting.currentMission].votings
+      ) {
+        state.game.voting.data[state.game.voting.currentMission].votings =
+          shuffleArray(
+            state.game.voting.data[state.game.voting.currentMission]?.votings
+          );
+      }
       state.game.voting.isVotingResult = action.payload;
     },
   },
