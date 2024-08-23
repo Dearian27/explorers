@@ -50,7 +50,7 @@ const DebugPanel = () => {
               players[currentPlayer]?.id === p.id && "bg-light text-dark"
             )}
           >
-            {p?.id} {p.name} ({p.role})
+            {p?.id + 1} {p.name} ({p.role} id:{p?.id})
             {p.isClone && (
               <div
                 className={twMerge(

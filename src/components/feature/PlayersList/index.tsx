@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import ListItem from "./ListItem";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
@@ -12,6 +12,7 @@ interface PlayersListProps {
   filter?: number[] | null | "you";
   submitSelectedClassName?: string;
   title?: string;
+  children?: ReactNode;
 }
 
 const PlayersList: FC<PlayersListProps> = ({
@@ -19,6 +20,7 @@ const PlayersList: FC<PlayersListProps> = ({
   filter = null,
   submitSelectedClassName,
   title,
+  children,
 }) => {
   const dispatch = useDispatch();
   const { players, submitSelection, selectedPlayers, currentPlayer } =
@@ -73,6 +75,7 @@ const PlayersList: FC<PlayersListProps> = ({
           );
         })}
       </div>
+      {children ? children : null}
     </div>
   );
 };

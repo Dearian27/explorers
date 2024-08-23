@@ -32,6 +32,13 @@ const DayIF = ({ menuBtnRef }) => {
     (acc, next) => (next.isShown ? acc + 1 : acc),
     0
   );
+
+  const votingTitle = `Голосування${
+    currentMission < missions?.length
+      ? " (" + missions[currentMission]?.playersCapacity + " гравців)"
+      : ""
+  }`;
+
   return (
     <>
       {isVoting ? (
@@ -86,7 +93,7 @@ const DayIF = ({ menuBtnRef }) => {
               Меню
             </button>
           </header>
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col p-4">
             <div className="flex bg-blue-200 self-start">
               <input
                 readOnly
@@ -113,27 +120,22 @@ const DayIF = ({ menuBtnRef }) => {
             </div>
             <SpeechTimer />
 
-            <div className="flex flex-col gap-4 self-center items-center my-4 p-4 pt-2 border border-dark rounded-md bg-main">
-              <h1 className="text-xl font-bold">Голосування</h1>
-              {currentMission < missions?.length && (
-                <h2 className="-mt-4 text-md font-bold text-light">2 гравці</h2>
-              )}
-              <PlayersList maxSelected={players?.length} />
-              {/* //* додати день під результатом голосування */}
-              {currentMission < missions?.length && (
-                <Button
-                  disabled={
-                    selectedPlayers.length !==
-                    missions[currentMission]?.playersCapacity
-                  }
-                  // disabled={} //* disable якщо не було місії у цьому ходу або модалку висвітити при спробі
-                  onClick={() => startVoting()}
-                  className="bg-dark shadow-[#a19182]"
-                >
-                  Розпочати
-                </Button>
-              )}
-            </div>
+            <PlayersList title={votingTitle} maxSelected={players?.length} />
+            {currentMission < missions?.length && (
+              <button
+                disabled={
+                  selectedPlayers.length !==
+                  missions[currentMission]?.playersCapacity
+                }
+                // disabled={} //* disable якщо не було місії у цьому ходу або модалку висвітити при спробі
+                onClick={() => startVoting()}
+                className="bg-dark text-white self-end py-2 px-3 rounded-md font-bold mt-2 transition duration-300 disabled:bg-zinc-400 disabled:text-zinc-200"
+              >
+                Розпочати
+              </button>
+            )}
+
+            {/* //* додати день під результатом голосування */}
             <Missions />
           </div>
         </div>
