@@ -1,6 +1,7 @@
 export type RoleVariants =
   | "clone"
   | "explorer"
+  | "patriot"
   | "detective"
   | "interceptor"
   | "finder"
@@ -14,12 +15,13 @@ export interface RoleParams {
   minCount?: number;
   mandatory?: boolean;
   single?: boolean;
+  roles: string[];
 }
 
 export interface IPlayer {
   id: number;
   name: string;
-  role: RoleVariants;
+  role: RoleParams;
   isClone: boolean;
   cloneStartDay?: number; //?  mean start day of setting isClone to true (delay??)
   disabledCellIds: number[];

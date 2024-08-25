@@ -31,7 +31,7 @@ const PlayersList: FC<PlayersListProps> = ({
     filter: number[] | null | "you"
   ) => {
     if (Array.isArray(filter)) {
-      return players.filter((player) => !filter.includes(player.id));
+      return players.filter((player) => !filter?.includes(player.id));
     }
     if (filter === "you") {
       return players.filter(

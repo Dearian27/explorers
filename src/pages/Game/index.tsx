@@ -18,6 +18,7 @@ import { useRef } from "react";
 import DetectiveIF from "../../components/interfaces/DetectiveIF";
 import CloneIF from "../../components/interfaces/CloneIF";
 import DayIF from "../../components/interfaces/DayIF";
+import PatriotIF from "../../components/interfaces/PatriotIF";
 
 const Game = () => {
   const { toggleNightHandler, votingAnswer, voteHandler } = useGameProps();
@@ -31,7 +32,6 @@ const Game = () => {
   } = useSelector((state: RootState) => state.game.game);
 
   const buttonRef = useRef(null!);
-
   return (
     <>
       <Menu buttonRef={buttonRef} />
@@ -47,6 +47,7 @@ const Game = () => {
               <PlayersMessagesIF />
               <DetectiveIF />
               <InterceptorIF />
+              <PatriotIF />
             </>
           )}
         </div>

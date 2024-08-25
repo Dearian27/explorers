@@ -80,7 +80,9 @@ const StartGame = () => {
     return activeRoles
       ?.filter((role) => role.count > 0)
       .reduce((acc, role) => {
-        const expanded = Array(role.count).fill({ name: role.name });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { count, ...roleContent } = role;
+        const expanded = Array(role.count).fill(roleContent);
         return acc.concat(expanded);
       }, []);
   };
@@ -91,7 +93,7 @@ const StartGame = () => {
         return {
           id: 0,
           disabledCellIds: [],
-          role: role.name,
+          role: role,
           name: "",
           isClone: role.name === "clone" ? true : false,
         };
@@ -106,7 +108,7 @@ const StartGame = () => {
     dispatch(
       setActiveCloneId({
         value: players.find((p: IPlayer) => {
-          return p?.role === "clone";
+          return p?.role.name === "clone";
         })?.id,
         startDay: firstInfectDay,
       })

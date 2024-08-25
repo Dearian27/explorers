@@ -19,7 +19,7 @@ const PlayersMessagesIF = () => {
           (message) =>
             message.type === "clone" &&
             message.receiptDay === day &&
-            message.receiversId.includes(players[currentPlayer].id) &&
+            message.receiversId?.includes(players[currentPlayer].id) &&
             (!doubleNightCycle || currentCycle !== 0)
         )
         ?.map((message, index) => (

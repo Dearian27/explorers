@@ -14,7 +14,7 @@ const InterceptorIF = () => {
       interceptorsVisionDelay,
     },
   } = useSelector((state: RootState) => state.game.game);
-  if (players[currentPlayer]?.role !== "interceptor") return;
+  if (!players[currentPlayer]?.role?.roles?.includes("interceptor")) return;
 
   return (
     <>

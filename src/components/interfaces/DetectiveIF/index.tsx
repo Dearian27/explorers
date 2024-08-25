@@ -13,7 +13,7 @@ const DetectiveIF = () => {
   } = useSelector((state: RootState) => state.game.game);
 
   if (
-    players[currentPlayer].role !== "detective" ||
+    !players[currentPlayer].role?.roles.includes("detective") ||
     !(currentCycle > 0 || !doubleNightCycle) //? якщо цикл не перший (для двоциклової ночі) або якщо не двоциклова ніч (детектив перевіряє на другому циклі ночі)
   )
     return;

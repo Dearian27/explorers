@@ -31,7 +31,7 @@ const PlayerNightBottomIF = () => {
     <>
       {!checkIsIntroductionNight() && (
         <>
-          {players[currentPlayer]?.role === "detective" &&
+          {players[currentPlayer]?.role?.roles?.includes("detective") &&
             (currentCycle > 0 || !doubleNightCycle) && (
               <Button
                 disabled={!selectedPlayers.length}

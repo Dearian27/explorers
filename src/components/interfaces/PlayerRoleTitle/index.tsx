@@ -11,13 +11,18 @@ const PlayerRoleTitle = () => {
       <h1
         className={twMerge(
           "text-2xl font-bold self-center uppercase",
-          players[currentPlayer]?.isClone && "text-red-500"
+          !players[currentPlayer].role?.roles?.includes("patriot") &&
+            players[currentPlayer]?.isClone &&
+            "text-red-500"
+          // players[currentPlayer].role?.roles?.includes("patriot") &&
+          //   players[currentPlayer]?.isClone &&
+          //   "text-[#59afff]"
         )}
       >
-        {players[currentPlayer]?.role}
+        {players[currentPlayer]?.role.name}
       </h1>
       {players[currentPlayer]?.isClone &&
-        players[currentPlayer].role !== "clone" && (
+        players[currentPlayer].role.name !== "clone" && (
           <h1
             className={twMerge(
               "text-md font-semibold self-center text-red-600 mt-[-1.2rem]"

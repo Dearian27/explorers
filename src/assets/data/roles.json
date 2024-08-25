@@ -5,33 +5,47 @@
     "name": "clone",
     "value": -1,
     "minCount": 1,
-    "mandatory": true
+    "mandatory": true,
+    "roles": ["clone", "mainClone"]
   },
   {
     "id": 2,
     "isEvil": false,
-    "name": "explorer",
-    "value": 0.1,
-    "single": false
+    "name": "patriot",
+    "value": 0.5,
+    "single": false,
+    "roles": ["patriot", "interceptor", "explorer"],
+    "mandatory": true
   },
   {
     "id": 3,
     "isEvil": false,
-    "name": "detective",
-    "value": 0.3
+    "name": "explorer",
+    "value": 0.1,
+    "single": false,
+    "roles": ["explorer"]
   },
   {
     "id": 4,
     "isEvil": false,
-    "name": "interceptor",
-    "value": 0.5
+    "name": "detective",
+    "value": 0.3,
+    "roles": ["detective", "explorer"]
   },
   {
     "id": 5,
+    "isEvil": false,
+    "name": "interceptor",
+    "value": 0.5,
+    "roles": ["interceptor", "explorer"]
+  },
+  {
+    "id": 6,
     "name": "finder",
     "isEvil": false,
     "value": 0.25,
     "single": false,
-    "minCount": 2
+    "minCount": 2,
+    "roles": ["explorer", "finder"]
   }
 ]
